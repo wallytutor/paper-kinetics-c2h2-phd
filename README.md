@@ -1,2 +1,3 @@
-# paper-kinetics-c2h2-phd
-Analysis of acetylene kinetics under conditions relevant to gas carburizing
+# Analysis of acetylene pyrolysis with a DRG skeletal mechanism
+
+Analysis of acetylene kinetics under conditions relevant to gas carburizing.
