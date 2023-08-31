@@ -1,0 +1,76 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+| =========                 |                                                 |
+| \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
+|  \\    /   O peration     | Version:  v2106                                 |
+|   \\  /    A nd           | Website:  www.openfoam.com                      |
+|    \\/     M anipulation  |                                                 |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       volScalarField;
+    object      T;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+dimensions      [ 0  0  0  1  0  0  0 ];
+
+internalField   uniform 301.0;
+
+boundaryField
+{
+
+    front
+    {
+        type            wedge;
+    }
+
+    back
+    {
+        type            wedge;
+    }
+
+    wall
+    {
+        type  codedFixedValue;
+        value $internalField;
+        name  wall_temperature_bc;
+
+        code
+        #{
+            double T_sp = 0.985507 * 1173.00;
+            double a1 = 0.131360276011, m1 = 6.396870587401;
+            double a2 = 0.501378719714, m2 = 18.019474815463;
+
+            vector axisX = vector(1, 0, 0);
+            scalarField x = (patch().Cf() & axisX);
+
+            scalarField u = Foam::pow(x / a1, m1);
+            scalarField d = Foam::pow(x / a2, m2);
+
+            scalarField Tu = (T_sp - 301.0) * (1 - Foam::exp(-u));
+            scalarField Td = (T_sp - 400.0) * (1 - Foam::exp(-d));
+
+            scalarField Tval = 301 + Tu - Td;
+            operator==(Tval);
+        #};
+    }
+
+    inlet
+    {
+        type            fixedValue;
+        value           uniform 301.0;
+    }
+
+    outlet
+    {
+        type            inletOutlet;
+        inletValue      uniform 301.0;
+        value           uniform 301.0;
+    }
+
+}
+
+
+// ************************************************************************* //
