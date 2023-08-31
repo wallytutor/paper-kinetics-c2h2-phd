@@ -1,0 +1,60 @@
+./../../unloaded/T1023K_D0500CCN2.dat
+ Fitting graphic in  uT1023K_D0500CCN2.png
+ Bodenstein number   12.506
+ Peclet_ax number    6.253
+ Integral =          1.00
+ Johnson parameters: 
+	 p0=[2.0395094535874159e+00, 9.3012711663679525e+07,
+     4.8626815277017478e+01, 2.6960596519271167e+01]
+
+
+./../../unloaded/T1173K_D0500CCN2.dat
+ Fitting graphic in  uT1173K_D0500CCN2.png
+ Bodenstein number   10.445
+ Peclet_ax number    5.223
+ Integral =          1.00
+ Johnson parameters: 
+	 p0=[1.9358755064761821e+00, 3.7279540465162292e+07,
+     3.7971118331578189e+01, 2.3984238475974418e+01]
+
+
+./../../unloaded/T1173K_D1000CCN2.dat
+ Fitting graphic in  uT1173K_D1000CCN2.png
+ Bodenstein number   9.970
+ Peclet_ax number    4.985
+ Integral =          1.00
+ Johnson parameters: 
+	 p0=[1.9005008705413882e+00, 1.6476530975853954e+07,
+     2.3358328802144950e+01, 2.2891096064595686e+01]
+
+
+./../../loaded/T1023K_D0500CCN2.dat
+ Fitting graphic in  lT1023K_D0500CCN2.png
+ Bodenstein number   12.694
+ Peclet_ax number    6.347
+ Integral =          1.00
+ Johnson parameters: 
+	 p0=[2.0443985620212235e+00, 8.3662695155553699e+07,
+     5.0415463500964847e+01, 2.6755586419657995e+01]
+
+
+./../../loaded/T1173K_D0500CCN2.dat
+ Fitting graphic in  lT1173K_D0500CCN2.png
+ Bodenstein number   13.380
+ Peclet_ax number    6.690
+ Integral =          1.00
+ Johnson parameters: 
+	 p0=[2.0889945967077175e+00, 6.0617134852427550e+07,
+     4.8692024226348437e+01, 2.6783880530291380e+01]
+
+
+./../../loaded/T1173K_D1000CCN2.dat
+ Fitting graphic in  lT1173K_D1000CCN2.png
+ Bodenstein number   10.261
+ Peclet_ax number    5.131
+ Integral =          1.00
+ Johnson parameters: 
+	 p0=[1.8990296820496020e+00, 4.8346433279576905e+07,
+     2.2456240984131352e+01, 2.5138957705241733e+01]
+
+
