@@ -1,0 +1,40 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+| =========                 |                                                 |
+| \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
+|  \\    /   O peration     | Version:  v2106                                 |
+|   \\  /    A nd           | Website:  www.openfoam.com                      |
+|    \\/     M anipulation  |                                                 |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       dictionary;
+    object      chemistryProperties;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+chemistryType
+{
+    solver                 ode;
+}
+
+chemistry                  on;
+
+initialChemicalTimeStep    1.0e-06;
+
+EulerImplicitCoeffs
+{
+    cTauChem               1;
+    equilibriumRateLimiter off;
+}
+
+odeCoeffs
+{
+    solver                 seulex;
+    absTol                 1.0e-15;
+    relTol                 1.0e-03;
+}
+
+
+// ************************************************************************* //
