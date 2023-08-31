@@ -1,0 +1,8 @@
+# Keep drafts for now
+!legacy/
+
+# ... but no results
+legacy/results/
+
+# ... or even older drafts
+legacy/draft/
