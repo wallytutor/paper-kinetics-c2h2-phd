@@ -1,6 +1,17 @@
 ## Python:
 __pycache__/
 
+## Jupyter:
+.ipynb_checkpoints
+*.ipynb
+
+## chemFoam results:
+!chemFoam.out
+
+## Automatically generated:
+/psr-*/0.000000/
+/psr-*/1.000000/
+
 ## Draft files:
 legacy/
 
@@ -28,7 +39,7 @@ legacy/
 # *.pdf
 
 ## Generated if empty string is given at "Please type another file name for output:"
-.pdf
+article.pdf
 
 ## Bibliography auxiliary files (bibtex/biblatex/biber):
 *.bbl

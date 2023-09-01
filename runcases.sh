@@ -8,5 +8,5 @@ function runcase()
     runApplication `getApplication`
 }
 
-cd dalmazsi-2017 && runcase && cd ..
-cd norinaga-2009 && runcase && cd ..
+cd psr-dalmazsi-2017 && runcase && cd ..
+cd psr-norinaga-2009 && runcase && cd ..
