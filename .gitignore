@@ -27,6 +27,10 @@ cfd-*/constant/reactions
 cfd-*/constant/thermo
 *.msh
 
+# These must be kept!
+!cfd-dalmazsi-2017-base/constant/reactions
+!cfd-dalmazsi-2017-base/constant/thermo
+
 ## Draft files:
 legacy/
 
