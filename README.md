@@ -12,7 +12,7 @@ Data explored in this paper is provided in my [PhD thesis](http://docnum.univ-lo
 
 ## Summary of calculations
 
-- [x] [Verification of mechanisms with PSR models (Cantera and chemFoam)](src/psr/notebook.ipynb)
+- [x] [Verification of mechanisms with PSR models (Cantera and chemFoam)](src/psr/)
 - [ ] [Simulation of experimental conditions with a non-isothermal PFR](src/pfr/)
 - [ ] [Extension to real geometry of reactor with OpenFOAM](src/foam/)
 
