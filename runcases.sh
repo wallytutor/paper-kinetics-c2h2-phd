@@ -18,7 +18,7 @@ function runcfdcase()
 
     cd ${casepath}
     runApplication decomposePar
-    runParallel -force $(getApplication)
+    runParallel $(getApplication) &
 
 }
 

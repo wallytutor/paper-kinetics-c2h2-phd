@@ -19,6 +19,7 @@ log.decomposePar
 
 # Commit once ready?
 log.reactingFoam
+cfd-dalmazsi-2017-base/log.*
 
 # Do not commit specific case mesh.
 cfd-*/constant/polyMesh
