@@ -26,9 +26,9 @@ endTime           10000000.0;
 
 deltaT            1.0e-05;
 
-writeControl      runTime;
+writeControl      timeStep;
 
-writeInterval     100;
+writeInterval     1000;
 
 purgeWrite        0;
 
