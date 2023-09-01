@@ -91,28 +91,55 @@ def compare_cantera_chemfoam(mechanism, name, tend=1.0):
     print(row)
 ```
 
+## DRG mechanism
+
+```
+Cantera:
+ T = 1298.8, p = 5000, C2H2 = 0.242606, CH4 = 0.001410
+
+OpenFOAM:
+
+ T = 1299.9, p = 5000, C2H2 = 0.24196, CH4 = 0.00141113
+```
+
 ```python
 compare_cantera_chemfoam(dalmazsi2017, "dalmazsi-2017")
+```
+
+## Detailed mechanism
+
+```
+Cantera:
+ T = 1299.7, p = 5000, C2H2 = 0.240127, CH4 = 0.001216
+
+OpenFOAM:
+
+ T = 1301.02, p = 5000, C2H2 = 0.239335, CH4 = 0.00121622
 ```
 
 ```python
 compare_cantera_chemfoam(norinaga2009, "norinaga-2009")
 ```
 
+<!-- #region -->
 ## Afterword: `chemFoam` tutorial
+
+Dictionaries for `chemFoam` are quite simple, we only need the following folders/files:
+
 
 ### `system/`
 
-- System dictionaries for `chemFoam` are quite simple. A traditional `controlDict` is expected and there we set the system to integrate over one physical second and store only the final state.
+- `controlDict`: there we set the system to integrate over one physical second and store only the final state.
 
-- The only definition in `fvSchemes` regards the time-derivative: explicit solver `Euler` is expected here.
+- `fvSchemes`: the only definition in regards the time-derivative: explicit solver `Euler` is expected here.
 
-- In the case of `fvSolution` only the integrated species content `Yi` is required.
+- `fvSolution`: only the integrated species content `Yi` is required.
 
 ### `constants/`
 
-- File `chemistryProperties` provides ODE problem parameters. The most important feature here is the use of `seulex` integrator, this being reported to provide the best treatment of stiff systems from chemical kinetics.
+- `chemistryProperties`: provides ODE problem parameters. The most important feature here is the use of `seulex` integrator, this being reported to provide the best treatment of stiff systems from chemical kinetics.
 
-- In `initialConditions` we provide the values for automatic generation of `0/` directory. It is a particularity of `chemFoam` that it generates that directory by processing this dictionary. Here we define the reactor to be held at constant pressure and state that composition is provided in mole fractions.
+- `initialConditions`: we provide the values for automatic generation of `0/` directory. It is a particularity of `chemFoam` that it generates that directory by processing this dictionary. Here we define the reactor to be held at constant pressure and state that composition is provided in mole fractions.
 
-- The case is closed by the `thermophysicalProperties`. A `chemistryReader` is provided to be able to interpret mechanism files in the required format. It is recommended to perform conversion for Chemkin II format and check files for any errors, giving preference to OpenFOAM own format here. The use of `<constant>` means the files are to be stored in the `constant/` case directory.
+- `thermophysicalProperties`: a `chemistryReader` is provided to be able to interpret mechanism files in the required format. It is recommended to perform conversion for Chemkin II format and check files for any errors, giving preference to OpenFOAM own format here. The use of `<constant>` means the files are to be stored in the `constant/` case directory.
+<!-- #endregion -->
