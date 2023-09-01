@@ -511,6 +511,8 @@ generate_wall_bc(params.iloc[4].to_dict())
 
 ## Setup of CFD cases
 
+Cases below 1073 K may be skipped because there is no decomposition of acetylene for the given residence times.
+
 ```python
 conditions = pd.DataFrame([
     {"N":  1, "P":  5000, "Q": 222, "T":  773, "X": 0.352},

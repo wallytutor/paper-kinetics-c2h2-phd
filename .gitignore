@@ -12,6 +12,19 @@ __pycache__/
 /psr-*/0.000000/
 /psr-*/1.000000/
 
+## Foam and parallel run:
+dynamicCode/
+processor*/
+log.decomposePar
+
+# Commit once ready?
+log.reactingFoam
+
+# Do not commit specific case mesh.
+cfd-*/constant/polyMesh
+cfd-*/constant/reactions
+cfd-*/constant/thermo
+
 ## Draft files:
 legacy/
 
