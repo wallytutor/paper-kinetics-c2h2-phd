@@ -52,10 +52,16 @@ In this notebook we compare results obtained for a perfect-stirred reactor (PSR)
 from pathlib import Path
 import cantera as ct
 import pandas as pd
+import pyvista as pv
 from papertools import report_dimensionless
 from papertools import compare_cantera_chemfoam
 from papertools import fit_wall_temperature
 from papertools import generate_wall_bc
+```
+
+```python
+pv.set_jupyter_backend("static")
+# pv.start_xvfb()
 ```
 
 Mechanisms are stored in another [repository](https://github.com/wallytutor/archive-databases/tree/main) and have been cloned relative to the root of the current one. Below we assembly the paths to retrieve Cantera files.
