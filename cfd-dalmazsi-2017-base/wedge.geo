@@ -19,7 +19,7 @@ radius = 0.014;
 theta = 1 * Pi / 180;
 
 // Cell size over length.
-size_length = 0.0050;
+size_length = 0.0010;
 
 // Cell characteristic size over radius.
 size_radius = 0.0005;

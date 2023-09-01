@@ -12,13 +12,13 @@ function runcfdcase()
 {
     casepath=${1}
 
-    cp -avr data/polyMesh  ${casepath}/constant/
-    cp data/reactions ${casepath}/constant/
-    cp data/thermo    ${casepath}/constant/
+    cp -avr cfd-dalmazsi-2017-base/constant/polyMesh  ${casepath}/constant/
+    cp cfd-dalmazsi-2017-base/constant/reactions ${casepath}/constant/
+    cp cfd-dalmazsi-2017-base/constant/thermo    ${casepath}/constant/
 
     cd ${casepath}
     runApplication decomposePar
-    runParallel $(getApplication)
+    runParallel -force $(getApplication)
 
 }
 

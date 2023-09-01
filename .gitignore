@@ -24,6 +24,7 @@ log.reactingFoam
 cfd-*/constant/polyMesh
 cfd-*/constant/reactions
 cfd-*/constant/thermo
+*.msh
 
 ## Draft files:
 legacy/
