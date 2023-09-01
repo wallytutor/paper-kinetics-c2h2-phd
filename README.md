@@ -51,14 +51,16 @@ In this notebook we compare results obtained for a perfect-stirred reactor (PSR)
 ```python
 from pathlib import Path
 import cantera as ct
+import pandas as pd
 from papertools import report_dimensionless
 from papertools import compare_cantera_chemfoam
+from papertools import fit_wall_temperature
 ```
 
 Mechanisms are stored in another [repository](https://github.com/wallytutor/archive-databases/tree/main) and have been cloned relative to the root of the current one. Below we assembly the paths to retrieve Cantera files.
 
 ```python
-databases = Path("../../archive-databases/kinetics/")
+databases = Path("../archive-databases/kinetics/")
 
 norinaga2009 = "Norinaga_2009/CT-hydrocarbon-norinaga-2009-mech.yaml"
 dalmazsi2017 = "Dalmazsi_2017_sk41/CT-hydrocarbon-dalmazsi-2017-mech.yaml"
@@ -178,6 +180,246 @@ Dictionaries for `chemFoam` are quite simple, we only need the following folders
 
 - `thermophysicalProperties`: a `chemistryReader` is provided to be able to interpret mechanism files in the required format. It is recommended to perform conversion for Chemkin II format and check files for any errors, giving preference to OpenFOAM own format here. The use of `<constant>` means the files are to be stored in the `constant/` case directory.
 <!-- #endregion -->
+
+## Reactor geometry and temperature profile
+
+A sketch of the chemical reactor is provided below. Gas inlet is made by the left side in the diameter of 28 mm and flows at about room temperature until reaching the heated chamber at 20 cm. Pressure is measured at outlet and this will be important later for proper setup of boundary conditions.
+
+<center><img src="figures/reactor.png"/></center>
+
+To fit a function of wall temperature profile the following table is used. Notice here that measurements do not cover the full 80 cm of the reactor, but are in fact centered in the hot zone across a length of 52 cm. The first 3 rows we manually added (not actual measurements, so heated chamber starts actually at 12 cm) to provide a physically suitable shape for fitting the curve. Same was done on last row because measurement on chamber exit was highly unreliable because of thermocouple placement and contact with the wall.
+
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right">
+      <th></th>
+      <th>x</th>
+      <th>773</th>
+      <th>873</th>
+      <th>973</th>
+      <th>1023</th>
+      <th>1073</th>
+      <th>1123</th>
+      <th>1173</th>
+      <th>1223</th>
+      <th>1273</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>0.00</td>
+      <td>298</td>
+      <td>298.0</td>
+      <td>298</td>
+      <td>298</td>
+      <td>298.0</td>
+      <td>298</td>
+      <td>298.0</td>
+      <td>298.0</td>
+      <td>298.0</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>0.05</td>
+      <td>299</td>
+      <td>299.0</td>
+      <td>299</td>
+      <td>299</td>
+      <td>299.0</td>
+      <td>299</td>
+      <td>299.0</td>
+      <td>299.0</td>
+      <td>299.0</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>0.10</td>
+      <td>300</td>
+      <td>300.0</td>
+      <td>300</td>
+      <td>300</td>
+      <td>300.0</td>
+      <td>300</td>
+      <td>300.0</td>
+      <td>300.0</td>
+      <td>300.0</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>0.12</td>
+      <td>400</td>
+      <td>503.0</td>
+      <td>653</td>
+      <td>689</td>
+      <td>726.0</td>
+      <td>755</td>
+      <td>783.0</td>
+      <td>793.0</td>
+      <td>803.0</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>0.15</td>
+      <td>650</td>
+      <td>757.0</td>
+      <td>873</td>
+      <td>896</td>
+      <td>919.0</td>
+      <td>959</td>
+      <td>1000.0</td>
+      <td>1048.0</td>
+      <td>1095.0</td>
+    </tr>
+    <tr>
+      <th>5</th>
+      <td>0.20</td>
+      <td>750</td>
+      <td>834.0</td>
+      <td>918</td>
+      <td>965</td>
+      <td>1013.0</td>
+      <td>1057</td>
+      <td>1101.0</td>
+      <td>1151.0</td>
+      <td>1200.0</td>
+    </tr>
+    <tr>
+      <th>6</th>
+      <td>0.25</td>
+      <td>762</td>
+      <td>850.0</td>
+      <td>949</td>
+      <td>1001</td>
+      <td>1052.0</td>
+      <td>1098</td>
+      <td>1143.0</td>
+      <td>1189.0</td>
+      <td>1235.0</td>
+    </tr>
+    <tr>
+      <th>7</th>
+      <td>0.30</td>
+      <td>763</td>
+      <td>869.0</td>
+      <td>971</td>
+      <td>1018</td>
+      <td>1064.0</td>
+      <td>1110</td>
+      <td>1156.0</td>
+      <td>1205.0</td>
+      <td>1253.0</td>
+    </tr>
+    <tr>
+      <th>8</th>
+      <td>0.35</td>
+      <td>763</td>
+      <td>859.0</td>
+      <td>954</td>
+      <td>1001</td>
+      <td>1047.5</td>
+      <td>1095</td>
+      <td>1142.5</td>
+      <td>1188.5</td>
+      <td>1233.5</td>
+    </tr>
+    <tr>
+      <th>9</th>
+      <td>0.40</td>
+      <td>763</td>
+      <td>849.0</td>
+      <td>937</td>
+      <td>984</td>
+      <td>1031.0</td>
+      <td>1080</td>
+      <td>1129.0</td>
+      <td>1172.0</td>
+      <td>1214.0</td>
+    </tr>
+    <tr>
+      <th>10</th>
+      <td>0.45</td>
+      <td>582</td>
+      <td>697.5</td>
+      <td>780</td>
+      <td>837</td>
+      <td>894.0</td>
+      <td>931</td>
+      <td>967.5</td>
+      <td>990.5</td>
+      <td>1012.5</td>
+    </tr>
+    <tr>
+      <th>11</th>
+      <td>0.50</td>
+      <td>440</td>
+      <td>546.0</td>
+      <td>623</td>
+      <td>690</td>
+      <td>757.0</td>
+      <td>782</td>
+      <td>806.0</td>
+      <td>809.0</td>
+      <td>811.0</td>
+    </tr>
+    <tr>
+      <th>12</th>
+      <td>0.52</td>
+      <td>400</td>
+      <td>400.0</td>
+      <td>400</td>
+      <td>400</td>
+      <td>400.0</td>
+      <td>400</td>
+      <td>400.0</td>
+      <td>400.0</td>
+      <td>400.0</td>
+    </tr>
+  </tbody>
+</table>
+
+```python
+Twall = pd.read_csv("data/wall-temperature.csv")
+```
+
+As we observe on row 7, temperature in the middle of the reactor heated zone does not reach the set-point value. Below we verify that actually abot 99% of the value is actually reached and this is an important factor for a proper kinetics simulation given the exponential role of activation energies.
+
+```python
+T_pv = Twall.iloc[7, 1:].to_numpy()
+T_sp = Twall.columns[1:].astype(float).to_numpy()
+
+scale = (T_pv / T_sp)
+scale
+```
+
+Given the increasing-plateau-decreasing shape of the profile, a composition of sigmoid functions is proposed as a model for the data. The function is evaluated in terms of temperature and has a physical parameter `T_sp` for set-point temperature. Other parameters are fitted to match the profile. Parameters `a1`/`a2` provide the inflexion points and `m1`/`m2` the slopes of uphill/downhill profiles. We make use of `scipy.optimize.curve_fit` to find the unknown parameters and visualize the results.
+
+![Wall temperature](figures/wall_temperature_fit.png)
+
+```python
+params = fit_wall_temperature(Twall, scale)
+```
+
+## Setup of CFD cases
+
+```python
+conditions = pd.DataFrame([
+    {"N":  1, "P":  5000, "Q": 222, "T":  773, "X": 0.352},
+    {"N":  2, "P":  5000, "Q": 222, "T":  873, "X": 0.364},
+    {"N":  3, "P":  5000, "Q": 222, "T":  973, "X": 0.364},
+    {"N":  4, "P":  5000, "Q": 222, "T": 1073, "X": 0.346},
+    {"N":  5, "P":  5000, "Q": 222, "T": 1123, "X": 0.312},
+    {"N":  6, "P":  5000, "Q": 222, "T": 1173, "X": 0.307},
+    {"N":  7, "P":  5000, "Q": 222, "T": 1273, "X": 0.298},
+    {"N":  8, "P":  3000, "Q": 222, "T": 1173, "X": 0.323},
+    {"N":  9, "P":  3000, "Q": 222, "T": 1223, "X": 0.314},
+    {"N": 10, "P": 10000, "Q": 222, "T": 1173, "X": 0.249},
+    {"N": 11, "P": 10000, "Q": 222, "T": 1223, "X": 0.226},
+    {"N": 12, "P": 10000, "Q": 222, "T": 1273, "X": 0.201},
+    {"N": 13, "P": 10000, "Q": 378, "T": 1023, "X": 0.343},
+    {"N": 14, "P": 10000, "Q": 378, "T": 1123, "X": 0.298},
+]).set_index("N")
+```
 
 ## Summary of CFD results
 
