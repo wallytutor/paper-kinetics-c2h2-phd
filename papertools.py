@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from textwrap import dedent
 from scipy.optimize import curve_fit
 import statistics
 import warnings
@@ -57,6 +58,36 @@ def fit_wall_temperature(Twall, scale):
     params_df = pd.DataFrame(params)
     params_df.columns = ["T", "scale", "a1", "a2", "m1", "m2"]
     return params_df
+
+
+def generate_wall_bc(params):
+    """ Generate code for OpenFOAM boundary condition. """
+    wall_temperature_bc = dedent("""\
+        type  codedFixedValue;
+        value $internalField;
+        name  wall_temperature_bc;
+
+        code
+        #{{
+            double T_sp = {scale:.6f} * {T:.2f};
+            double a1 = {a1:.12f}, m1 = {m1:.12f};
+            double a2 = {a2:.12f}, m2 = {m2:.12f};
+
+            vector axisX = vector(1, 0, 0);
+            scalarField x = (patch().Cf() & axisX);
+
+            scalarField u = Foam::pow(x / a1, m1);
+            scalarField d = Foam::pow(x / a2, m2);
+
+            scalarField Tu = (T_sp - 301.0) * (1 - Foam::exp(-u));
+            scalarField Td = (T_sp - 400.0) * (1 - Foam::exp(-d));
+
+            scalarField Tval = 301 + Tu - Td;
+            operator==(Tval);
+        #}};\
+    """).format(**params)
+
+    print(wall_temperature_bc)
 
 
 def report_dimensionless(mechanism, T, P, X, L, U):

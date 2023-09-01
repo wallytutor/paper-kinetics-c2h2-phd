@@ -55,6 +55,7 @@ import pandas as pd
 from papertools import report_dimensionless
 from papertools import compare_cantera_chemfoam
 from papertools import fit_wall_temperature
+from papertools import generate_wall_bc
 ```
 
 Mechanisms are stored in another [repository](https://github.com/wallytutor/archive-databases/tree/main) and have been cloned relative to the root of the current one. Below we assembly the paths to retrieve Cantera files.
@@ -159,7 +160,7 @@ compare_cantera_chemfoam(norinaga2009, "psr-norinaga-2009", T, P, X)
 ```
 
 <!-- #region -->
-## Afterword: `chemFoam` tutorial
+## A note about `chemFoam`
 
 Dictionaries for `chemFoam` are quite simple, we only need the following folders/files:
 
@@ -396,8 +397,116 @@ Given the increasing-plateau-decreasing shape of the profile, a composition of s
 
 ![Wall temperature](figures/wall_temperature_fit.png)
 
+
+The following table compiles the parameters fitting the selected function.
+
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right">
+      <th></th>
+      <th>T</th>
+      <th>scale</th>
+      <th>a1</th>
+      <th>a2</th>
+      <th>m1</th>
+      <th>m2</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>773.0</td>
+      <td>0.987063</td>
+      <td>0.143839</td>
+      <td>0.465366</td>
+      <td>8.498838</td>
+      <td>15.589542</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>873.0</td>
+      <td>0.995418</td>
+      <td>0.138845</td>
+      <td>0.485018</td>
+      <td>7.161445</td>
+      <td>12.858167</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>973.0</td>
+      <td>0.997945</td>
+      <td>0.130311</td>
+      <td>0.490096</td>
+      <td>7.219046</td>
+      <td>12.825122</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>1023.0</td>
+      <td>0.995112</td>
+      <td>0.131512</td>
+      <td>0.495795</td>
+      <td>6.623234</td>
+      <td>14.073047</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>1073.0</td>
+      <td>0.991612</td>
+      <td>0.132188</td>
+      <td>0.500856</td>
+      <td>6.254105</td>
+      <td>16.953023</td>
+    </tr>
+    <tr>
+      <th>5</th>
+      <td>1123.0</td>
+      <td>0.988424</td>
+      <td>0.131778</td>
+      <td>0.501189</td>
+      <td>6.313607</td>
+      <td>17.562174</td>
+    </tr>
+    <tr>
+      <th>6</th>
+      <td>1173.0</td>
+      <td>0.985507</td>
+      <td>0.131360</td>
+      <td>0.501379</td>
+      <td>6.396870</td>
+      <td>18.019476</td>
+    </tr>
+    <tr>
+      <th>7</th>
+      <td>1223.0</td>
+      <td>0.985282</td>
+      <td>0.131623</td>
+      <td>0.498994</td>
+      <td>6.550948</td>
+      <td>15.856001</td>
+    </tr>
+    <tr>
+      <th>8</th>
+      <td>1273.0</td>
+      <td>0.984289</td>
+      <td>0.131839</td>
+      <td>0.496996</td>
+      <td>6.695226</td>
+      <td>14.754026</td>
+    </tr>
+  </tbody>
+</table>
+
 ```python
 params = fit_wall_temperature(Twall, scale)
+```
+
+We translate the fitted function in C++ and create a `codedFixedValue` boundary condition for enforcing the profile.
+
+Below we illustrate the generation of a coded boundary condition from one of the cases.
+
+```python
+generate_wall_bc(params.iloc[4].to_dict())
 ```
 
 ## Setup of CFD cases
