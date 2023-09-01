@@ -51,12 +51,14 @@ In this notebook we compare results obtained for a perfect-stirred reactor (PSR)
 ```python
 from pathlib import Path
 import cantera as ct
+import numpy as np
 import pandas as pd
 import pyvista as pv
 from papertools import report_dimensionless
 from papertools import compare_cantera_chemfoam
 from papertools import fit_wall_temperature
 from papertools import generate_wall_bc
+from papertools import plot_mesh
 ```
 
 ```python
@@ -518,6 +520,16 @@ generate_wall_bc(params.iloc[4].to_dict())
 ## Setup of CFD cases
 
 Cases below 1073 K may be skipped because there is no decomposition of acetylene for the given residence times.
+
+```python
+cpos = ((0.3, 0.005, 1.0),
+        (0.3, 0.005, 0.0),
+        (0.0, 0.000, 0.0))
+
+mtm = np.diag([1, 20, 1, 1])
+
+plot_mesh("cfd-dalmazsi-2017-base/wedge.msh", cpos=cpos, mtm=mtm)
+```
 
 ```python
 conditions = pd.DataFrame([
