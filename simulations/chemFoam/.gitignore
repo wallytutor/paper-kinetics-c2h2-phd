@@ -1,0 +1,9 @@
+## These are generated automatically:
+/**/constant/
+/**/system/
+/**/0.000000/
+/**/1.000000/
+
+## These will be commited once project is finished:
+/**/log.chemFoam
+/**/chemFoam.out

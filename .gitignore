@@ -5,12 +5,7 @@ __pycache__/
 .ipynb_checkpoints
 *.ipynb
 
-## chemFoam results:
-!chemFoam.out
 
-## Automatically generated:
-/psr-*/0.000000/
-/psr-*/1.000000/
 
 ## Foam and parallel run:
 dynamicCode/
