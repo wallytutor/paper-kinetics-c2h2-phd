@@ -18,7 +18,12 @@
 			bookmarksopen=true,
 			bookmarksnumbered=true]{hyperref}
 
+% TODO this is not the recommended way of siunitx!
 \newcommand{\sccm}{\cubic\centi\metre\per\minute}
+
+% Figures folder is one level above.
+\graphicspath{{../}}
+
 \makeatletter 
 %workaround for hyperref
 %https://www.tug.org/pipermail/tex-live/2012-August/032152.html
@@ -313,6 +318,6 @@ The authors are grateful to CNRS and IRT M2P for the financial support. We would
 
 
 \section*{References}
-\bibliography{references}
+\bibliography{article}
 
 \end{document}
