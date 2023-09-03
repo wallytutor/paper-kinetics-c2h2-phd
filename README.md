@@ -381,6 +381,10 @@ The following table compiles the parameters fitting the selected function.
 params = fit_wall_temperature(Twall, scale)
 ```
 
+```python
+params
+```
+
 We translate the fitted function in C++ and create a `codedFixedValue` boundary condition for enforcing the profile.
 
 Below we illustrate the generation of a coded boundary condition from one of the cases.
