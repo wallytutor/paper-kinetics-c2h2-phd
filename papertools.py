@@ -170,6 +170,7 @@ def compare_cantera_chemfoam(mechanism, casename, T, P, X, tend=1.0):
     net = ct.ReactorNet([reactor])
     net.advance(tend)
     
+    print(f"\nCalculations using {mechanism.name}")
     _results_report_cantera(reactor, gas)
     _results_report_chemfoam(casename)
 

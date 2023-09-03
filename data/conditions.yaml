@@ -1,0 +1,26 @@
+#
+
+reference_case:
+  # This is the amount of acetylene from the bottle added to mixture.
+  # Since acetylene is stored in liquid acetone, pollution of the gas
+  # is expected as discussed by Noringa (2009), see below `X`.
+  relative_acetylene: 0.36
+
+  # Test temperature [K].
+  T: 1173.15
+
+  # Test pressure [Pa].
+  P: 5000.0
+
+  # Composition in mole fractions assuming impurities in acetylene.
+  X:
+    N2:       0.64000
+    C2H2:     0.35280
+    CH3COCH3: 0.00648
+    CH4:      0.00072
+
+  # Characteristic velocity [m/s].
+  U: 1.0
+
+  # Length scale of reactor [m].
+  L: 1.0
