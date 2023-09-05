@@ -21,13 +21,7 @@ begin
 	using LsqFit
 	using Plots
 	using PlutoUI
-end
-
-# ╔═╡ 2bd1eeb7-cd10-4f7c-8bfd-89a36460747e
-begin
-	df =  DataFrame(CSV.File("../data/wall-temperature.csv", stripwhitespace=true))
-	splist = parse.(Float64, names(df)[2:end])
-	df
+	using YAML
 end
 
 # ╔═╡ a5bf468c-044d-452f-a99e-65a53f794b22
@@ -39,6 +33,12 @@ end
 
 # ╔═╡ 165a367e-648f-4662-b800-6e6dad67a711
 f(x, a) = f(x, a[1], a[2], a[3], a[4], a[5])
+
+# ╔═╡ e9b1862e-ba94-4801-b18d-666753c02fb2
+begin
+	data = YAML.load_file("../data/conditions.yaml")["wall_temperature"]
+	splist = filter(x->isa(x, Number), keys(data)) |> collect |> sort
+end;
 
 # ╔═╡ 03f406fd-6b03-4a8f-b6d2-ff437e81b5fd
 md"""
@@ -53,8 +53,8 @@ md"""
 
 # ╔═╡ d1b664b1-2718-46cb-b328-3318d9f43391
 begin
-	x1 = df[!, "x"]
-	y1 = df[!, "$(convert(Int, Tₛ))"]
+	x1 = data["x"]
+	y1 = data[convert(Int, Tₛ)]
 
 	spcorr = maximum(y1)
 
@@ -88,6 +88,7 @@ DataFrames = "a93c6f00-e57d-5684-b7b6-d8193f3e46c0"
 LsqFit = "2fda8390-95c7-5789-9bda-21331edee243"
 Plots = "91a5bcdd-55d7-5caf-9e0b-520d859cae80"
 PlutoUI = "7f904dfe-b85e-4ff6-b463-dae2292396a8"
+YAML = "ddb6d928-2868-570f-bddf-ab3f9cf99eb6"
 
 [compat]
 CSV = "~0.10.11"
@@ -95,6 +96,7 @@ DataFrames = "~1.6.1"
 LsqFit = "~0.13.0"
 Plots = "~1.39.0"
 PlutoUI = "~0.7.52"
+YAML = "~0.4.9"
 """
 
 # ╔═╡ 00000000-0000-0000-0000-000000000002
@@ -103,7 +105,7 @@ PLUTO_MANIFEST_TOML_CONTENTS = """
 
 julia_version = "1.9.0"
 manifest_format = "2.0"
-project_hash = "1f7eed78df50268747090734f059e244db82cc9e"
+project_hash = "4d227609b1752b75efe720534d004a59b7d6b708"
 
 [[deps.AbstractPlutoDingetjes]]
 deps = ["Pkg"]
@@ -1096,6 +1098,12 @@ version = "1.3.0"
     ChainRulesCore = "d360d2e6-b24c-11e9-a2a3-2a2ae2dbcce4"
     InverseFunctions = "3587e190-3f89-42d0-90ee-14403ec27112"
 
+[[deps.StringEncodings]]
+deps = ["Libiconv_jll"]
+git-tree-sha1 = "b765e46ba27ecf6b44faf70df40c57aa3a547dcb"
+uuid = "69024149-9ee7-55f6-a4c4-859efe599b68"
+version = "0.3.7"
+
 [[deps.StringManipulation]]
 git-tree-sha1 = "46da2434b41f41ac3594ee9816ce5541c6096123"
 uuid = "892a3eda-7b42-436c-8928-eab12a02cf0e"
@@ -1363,6 +1371,12 @@ git-tree-sha1 = "e92a1a012a10506618f10b7047e478403a046c77"
 uuid = "c5fb5394-a638-5e4d-96e5-b29de1b5cf10"
 version = "1.5.0+0"
 
+[[deps.YAML]]
+deps = ["Base64", "Dates", "Printf", "StringEncodings"]
+git-tree-sha1 = "e6330e4b731a6af7959673621e91645eb1356884"
+uuid = "ddb6d928-2868-570f-bddf-ab3f9cf99eb6"
+version = "0.4.9"
+
 [[deps.Zlib_jll]]
 deps = ["Libdl"]
 uuid = "83775a58-1f1d-513f-b197-d71354ab007a"
@@ -1446,9 +1460,9 @@ version = "1.4.1+0"
 
 # ╔═╡ Cell order:
 # ╠═f76d6a60-4a31-11ee-0ce2-cd0ad9ac9fe9
-# ╠═2bd1eeb7-cd10-4f7c-8bfd-89a36460747e
 # ╠═a5bf468c-044d-452f-a99e-65a53f794b22
 # ╠═165a367e-648f-4662-b800-6e6dad67a711
+# ╠═e9b1862e-ba94-4801-b18d-666753c02fb2
 # ╟─03f406fd-6b03-4a8f-b6d2-ff437e81b5fd
 # ╠═d1b664b1-2718-46cb-b328-3318d9f43391
 # ╠═05a4cbee-d86d-4937-8fc1-4f52d067dd76
