@@ -21,64 +21,98 @@ begin
 	using LsqFit
 	using Plots
 	using PlutoUI
+	using Printf
 	using YAML
 end
 
-# ╔═╡ a5bf468c-044d-452f-a99e-65a53f794b22
-function f(x, sp, a1, a2, m1, m2; baseline=301.0, stepline=350.0)
-    st_trm = @. (sp - baseline) * (1.0 - exp(-(x / a1)^m1))
-    nd_trm = @. (sp - stepline) * (1.0 - exp(-(x / a2)^m2))
-    return @. baseline + st_trm - nd_trm
+# ╔═╡ 3e4990fd-7761-4b2e-9e6e-e23e49fe2679
+begin
+	Y(y, x, a) = @. y(x, a[1], a[3]) - y(x, a[2], a[4])
+	
+	f(x, x₀, m) = (1 + exp(-x / x₀))^(-m)
+	g(x, x₀, m) = 1 - exp(-(x / x₀)^m)
+
+	F(x, a) = Y(f, x, a)
+	G(x, a) = Y(g, x, a)
+
+	println("Unhide for functions used in model fitting")
 end
 
-# ╔═╡ 165a367e-648f-4662-b800-6e6dad67a711
-f(x, a) = f(x, a[1], a[2], a[3], a[4], a[5])
+# ╔═╡ 1aa7384d-5834-47c8-9105-c01a38d45084
+function fit_profile(x, y)
+	T_min = minimum(y)
+	T_max = maximum(y)
+	ΔT = T_max - T_min
+	y = @. (y - T_min) / ΔT
+	
+	lb = [0.0,   0.0,   0.0, 0.0]
+	ub = [Inf,   Inf,   Inf, Inf]
+
+	p0 = [0.01, 0.05, 10^3, 10^4]
+	fit_f = curve_fit(F, x, y, p0, lower=lb, upper=ub)
+
+	p0 = [0.10, 0.50, 10^1, 10^1]
+	fit_g = curve_fit(G, x, y, p0, lower=lb, upper=ub)
+
+	return (fit_f.param, fit_g.param, ΔT, T_min)
+end
 
 # ╔═╡ e9b1862e-ba94-4801-b18d-666753c02fb2
 begin
+	println("Data loading")
 	data = YAML.load_file("../data/conditions.yaml")["wall_temperature"]
 	splist = filter(x->isa(x, Number), keys(data)) |> collect |> sort
 end;
 
 # ╔═╡ 03f406fd-6b03-4a8f-b6d2-ff437e81b5fd
 md"""
-|     |                                                                     |
+|     |  Set-point selector                                                 |
 | --- | :------------------------------------------------------------------ |
 | Tₛ  | $(@bind Tₛ Slider(splist, show_value=true))                         |
-| a₁  | $(@bind a1 Slider(0.05:0.005:0.20, default=0.15, show_value=true))  |
-| a₂  | $(@bind a2 Slider(0.40:0.005:0.70, default=0.50, show_value=true))  |
-| m₁  | $(@bind m1 Slider(1.0:0.1:20.0, default=7.0, show_value=true))      |
-| m₂  | $(@bind m2 Slider(1.0:0.1:20.0, default=15.0, show_value=true))     |
 """
 
-# ╔═╡ d1b664b1-2718-46cb-b328-3318d9f43391
-begin
-	x1 = data["x"]
-	y1 = data[convert(Int, Tₛ)]
+# ╔═╡ e08072b0-5795-44c3-9bce-e9103b0bcf22
+let
+	x0 = data["x"]
+	y0 = data[convert(Int, Tₛ)]
+		
+	af, ag, ΔT, T_min = fit_profile(x0, y0)
 
-	spcorr = maximum(y1)
+	xf = collect(0.0:0.001:0.6)
+	yf = F(xf, af) * ΔT .+ T_min
+	yg = G(xf, ag) * ΔT .+ T_min
 
-	lb = [0,    0.001, 0.001, 0.1,  0.1]
-	ub = [1e6,  1.0,   1.0,   1000, 1000]
-	p0 = [spcorr,   0.1,   0.5,   6,    9]
-
-	fit = curve_fit(f, x1, y1, p0, lower=lb, upper=ub)
+	f0 = F(x0, af) * ΔT .+ T_min
+	g0 = G(x0, af) * ΔT .+ T_min
 	
-	x2 = collect(0.0:0.001:0.6)
-	y2 = f(x2, spcorr, a1, a2, m1, m2)
-	y3 = f(x2, fit.param...)
+	εf = log10(sum(abs2.(f0 - y0)))
+	εg = log10(sum(abs2.(g0 - y0)))
 	
-	scatter(x1, y1, label=nothing)
-	plot!(x2, y2, label="Manual")
-	plot!(x2, y3, label="Fit")
-
+	plot()
+	scatter!(x0, y0, label=nothing)
+	plot!(xf, yf, label="F($(@sprintf("%.2f", εf)))")
+	plot!(xf, yg, label="G($(@sprintf("%.2f", εg)))")
+	
 	title!("Temperature profile")
 	xlabel!("Position [m]")
 	ylabel!("Temperature [K]")
 end
 
-# ╔═╡ 05a4cbee-d86d-4937-8fc1-4f52d067dd76
-fit
+# ╔═╡ 8bcd6d31-5dc0-499c-8d3f-5e99a7c8c52f
+begin
+	table = []
+	for sp in splist
+		x0 = data["x"]
+		y0 = data[convert(Int, sp)]
+		af, ag, ΔT, T_min = fit_profile(x0, y0)
+		push!(table, [af..., ΔT, T_min])
+	end
+
+	table
+end
+
+# ╔═╡ a963f2c9-1259-42c0-a863-d9f5d3ecc721
+
 
 # ╔═╡ 00000000-0000-0000-0000-000000000001
 PLUTO_PROJECT_TOML_CONTENTS = """
@@ -88,6 +122,7 @@ DataFrames = "a93c6f00-e57d-5684-b7b6-d8193f3e46c0"
 LsqFit = "2fda8390-95c7-5789-9bda-21331edee243"
 Plots = "91a5bcdd-55d7-5caf-9e0b-520d859cae80"
 PlutoUI = "7f904dfe-b85e-4ff6-b463-dae2292396a8"
+Printf = "de0858da-6303-5e67-8744-51eddeeeb8d7"
 YAML = "ddb6d928-2868-570f-bddf-ab3f9cf99eb6"
 
 [compat]
@@ -105,7 +140,7 @@ PLUTO_MANIFEST_TOML_CONTENTS = """
 
 julia_version = "1.9.0"
 manifest_format = "2.0"
-project_hash = "4d227609b1752b75efe720534d004a59b7d6b708"
+project_hash = "cc693b445d41b5f554d2b0758f00ff772769d46f"
 
 [[deps.AbstractPlutoDingetjes]]
 deps = ["Pkg"]
@@ -1460,11 +1495,12 @@ version = "1.4.1+0"
 
 # ╔═╡ Cell order:
 # ╠═f76d6a60-4a31-11ee-0ce2-cd0ad9ac9fe9
-# ╠═a5bf468c-044d-452f-a99e-65a53f794b22
-# ╠═165a367e-648f-4662-b800-6e6dad67a711
-# ╠═e9b1862e-ba94-4801-b18d-666753c02fb2
+# ╟─3e4990fd-7761-4b2e-9e6e-e23e49fe2679
+# ╟─1aa7384d-5834-47c8-9105-c01a38d45084
+# ╟─e9b1862e-ba94-4801-b18d-666753c02fb2
 # ╟─03f406fd-6b03-4a8f-b6d2-ff437e81b5fd
-# ╠═d1b664b1-2718-46cb-b328-3318d9f43391
-# ╠═05a4cbee-d86d-4937-8fc1-4f52d067dd76
+# ╟─e08072b0-5795-44c3-9bce-e9103b0bcf22
+# ╠═8bcd6d31-5dc0-499c-8d3f-5e99a7c8c52f
+# ╠═a963f2c9-1259-42c0-a863-d9f5d3ecc721
 # ╟─00000000-0000-0000-0000-000000000001
 # ╟─00000000-0000-0000-0000-000000000002
