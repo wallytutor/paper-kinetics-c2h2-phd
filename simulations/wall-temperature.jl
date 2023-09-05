@@ -25,6 +25,18 @@ begin
 	using YAML
 end
 
+# ╔═╡ a9ff6759-a205-422b-b08b-7a078f1819e0
+md"""
+# Wall temperature fitting
+"""
+
+# ╔═╡ e9b1862e-ba94-4801-b18d-666753c02fb2
+begin
+	println("Data loading")
+	data = YAML.load_file("../data/conditions.yaml")["wall_temperature"]
+	splist = filter(x->isa(x, Number), keys(data)) |> collect |> sort
+end;
+
 # ╔═╡ 3e4990fd-7761-4b2e-9e6e-e23e49fe2679
 begin
 	Y(y, x, a) = @. y(x, a[1], a[3]) - y(x, a[2], a[4])
@@ -57,18 +69,43 @@ function fit_profile(x, y)
 	return (fit_f.param, fit_g.param, ΔT, T_min)
 end
 
-# ╔═╡ e9b1862e-ba94-4801-b18d-666753c02fb2
-begin
-	println("Data loading")
-	data = YAML.load_file("../data/conditions.yaml")["wall_temperature"]
-	splist = filter(x->isa(x, Number), keys(data)) |> collect |> sort
-end;
+# ╔═╡ a963f2c9-1259-42c0-a863-d9f5d3ecc721
+function makecode(a, ΔT, T_min, sp)
+	"""
+	// $(sp) K
+	type  codedFixedValue;
+	value \$internalField;
+	name  wall_temperature_bc;
+
+	code
+	#{
+		double a1 = $(@sprintf("%.15e", a[1]));
+		double a2 = $(@sprintf("%.15e", a[2]));
+		double m1 = $(@sprintf("%.15e", a[3]));
+		double m2 = $(@sprintf("%.15e", a[4]));
+		double Tamp = $(@sprintf("%.3f", ΔT));
+		double Tmin = $(@sprintf("%.3f", T_min));
+
+		vector axisX = vector(1, 0, 0);
+		scalarField x = (patch().Cf() & axisX);
+
+		// f(x) = (1 + exp(-x / x₀))^(-m)
+		scalarField Tu = Foam::pow(1 + Foam::exp(-x / a1), m1);
+		scalarField Td = Foam::pow(1 + Foam::exp(-x / a2), m2);
+
+		// F(x) = (f(xu) - f(xd)) * Tamp + Tmin
+		scalarField Tval = (Tu - Td) * Tamp + Tmin;
+		operator==(Tval);
+	#};
+
+	"""
+end
 
 # ╔═╡ 03f406fd-6b03-4a8f-b6d2-ff437e81b5fd
 md"""
-|     |  Set-point selector                                                 |
-| --- | :------------------------------------------------------------------ |
-| Tₛ  | $(@bind Tₛ Slider(splist, show_value=true))                         |
+## Set-point selector
+
+Tₛ  = $(@bind Tₛ Slider(splist, show_value=true))
 """
 
 # ╔═╡ e08072b0-5795-44c3-9bce-e9103b0bcf22
@@ -83,7 +120,7 @@ let
 	yg = G(xf, ag) * ΔT .+ T_min
 
 	f0 = F(x0, af) * ΔT .+ T_min
-	g0 = G(x0, af) * ΔT .+ T_min
+	g0 = G(x0, ag) * ΔT .+ T_min
 	
 	εf = log10(sum(abs2.(f0 - y0)))
 	εg = log10(sum(abs2.(g0 - y0)))
@@ -98,21 +135,20 @@ let
 	ylabel!("Temperature [K]")
 end
 
+# ╔═╡ e5cf07cf-e6d7-4360-a6b3-67448e6bfcc6
+md"""
+## Dump to file
+"""
+
 # ╔═╡ 8bcd6d31-5dc0-499c-8d3f-5e99a7c8c52f
-begin
-	table = []
+open("wall-temperature.txt", "w") do fp
 	for sp in splist
-		x0 = data["x"]
-		y0 = data[convert(Int, sp)]
-		af, ag, ΔT, T_min = fit_profile(x0, y0)
-		push!(table, [af..., ΔT, T_min])
+		x = data["x"]
+		y = data[convert(Int, sp)]
+		a, _, ΔT, T_min = fit_profile(x, y)
+		write(fp, makecode(a, ΔT, T_min, sp))
 	end
-
-	table
 end
-
-# ╔═╡ a963f2c9-1259-42c0-a863-d9f5d3ecc721
-
 
 # ╔═╡ 00000000-0000-0000-0000-000000000001
 PLUTO_PROJECT_TOML_CONTENTS = """
@@ -1494,13 +1530,15 @@ version = "1.4.1+0"
 """
 
 # ╔═╡ Cell order:
+# ╟─a9ff6759-a205-422b-b08b-7a078f1819e0
 # ╠═f76d6a60-4a31-11ee-0ce2-cd0ad9ac9fe9
+# ╟─e9b1862e-ba94-4801-b18d-666753c02fb2
 # ╟─3e4990fd-7761-4b2e-9e6e-e23e49fe2679
 # ╟─1aa7384d-5834-47c8-9105-c01a38d45084
-# ╟─e9b1862e-ba94-4801-b18d-666753c02fb2
+# ╟─a963f2c9-1259-42c0-a863-d9f5d3ecc721
 # ╟─03f406fd-6b03-4a8f-b6d2-ff437e81b5fd
 # ╟─e08072b0-5795-44c3-9bce-e9103b0bcf22
+# ╟─e5cf07cf-e6d7-4360-a6b3-67448e6bfcc6
 # ╠═8bcd6d31-5dc0-499c-8d3f-5e99a7c8c52f
-# ╠═a963f2c9-1259-42c0-a863-d9f5d3ecc721
 # ╟─00000000-0000-0000-0000-000000000001
 # ╟─00000000-0000-0000-0000-000000000002
