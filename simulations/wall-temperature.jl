@@ -90,14 +90,14 @@ function makecode(a, ΔT, T_min, sp)
 		scalarField x = (patch().Cf() & axisX);
 
 		// f(x) = (1 + exp(-x / x₀))^(-m)
-		scalarField Tu = Foam::pow(1 + Foam::exp(-x / a1), m1);
-		scalarField Td = Foam::pow(1 + Foam::exp(-x / a2), m2);
+		scalarField Tu = Foam::pow(1 + Foam::exp(-x / a1), -m1);
+		scalarField Td = Foam::pow(1 + Foam::exp(-x / a2), -m2);
 
 		// F(x) = (f(xu) - f(xd)) * Tamp + Tmin
 		scalarField Tval = (Tu - Td) * Tamp + Tmin;
 		operator==(Tval);
 	#};
-
+	
 	"""
 end
 
