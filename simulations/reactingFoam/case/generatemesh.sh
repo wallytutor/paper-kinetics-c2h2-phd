@@ -2,7 +2,7 @@
 
 . ${WM_PROJECT_DIR:?}/bin/tools/RunFunctions
 
-gmsh wedge.geo -3 -format msh2 > log.gmsh
+/usr/bin/gmsh wedge.geo -3 -format msh2 > log.gmsh
 
 runApplication gmshToFoam wedge.msh
 
