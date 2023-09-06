@@ -29,14 +29,14 @@ function reactingFoamCaseRun()
 }
 
 # List cases to run here.
-reactingFoamCaseRun 004
+# reactingFoamCaseRun 004
 reactingFoamCaseRun 005
-reactingFoamCaseRun 006
-reactingFoamCaseRun 007
-reactingFoamCaseRun 008
-reactingFoamCaseRun 009
-reactingFoamCaseRun 010
-reactingFoamCaseRun 011
-reactingFoamCaseRun 012
-reactingFoamCaseRun 013
-reactingFoamCaseRun 014
+# reactingFoamCaseRun 006
+# reactingFoamCaseRun 007
+# reactingFoamCaseRun 008
+# reactingFoamCaseRun 009
+# reactingFoamCaseRun 010
+# reactingFoamCaseRun 011
+# reactingFoamCaseRun 012
+# reactingFoamCaseRun 013
+# reactingFoamCaseRun 014
