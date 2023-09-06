@@ -1,0 +1,78 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+| =========                 |                                                 |
+| \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
+|  \\    /   O peration     | Version:  v2106                                 |
+|   \\  /    A nd           | Website:  www.openfoam.com                      |
+|    \\/     M anipulation  |                                                 |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       volScalarField;
+    object      T;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+dimensions      [ 0  0  0  1  0  0  0 ];
+
+internalField   uniform 301.0;
+
+boundaryField
+{
+
+    front
+    {
+        type            wedge;
+    }
+
+    back
+    {
+        type            wedge;
+    }
+
+    wall
+    {
+        type  codedFixedValue;
+        value $internalField;
+        name  wall_temperature_bc;
+
+        code
+        #{
+            double a1 = 3.097798414047586e-02;
+            double a2 = 4.366041824855620e-02;
+            double m1 = 2.838360753665992e+01;
+            double m2 = 5.215611960452131e+04;
+            double Tamp = 766.000;
+            double Tmin = 298.000;
+
+            vector axisX = vector(1, 0, 0);
+            scalarField x = (patch().Cf() & axisX);
+
+            // f(x) = (1 + exp(-x / x₀))^(-m)
+            scalarField Tu = Foam::pow(1 + Foam::exp(-x / a1), -m1);
+            scalarField Td = Foam::pow(1 + Foam::exp(-x / a2), -m2);
+
+            // F(x) = (f(xu) - f(xd)) * Tamp + Tmin
+            scalarField Tval = (Tu - Td) * Tamp + Tmin;
+            operator==(Tval);
+        #};
+    }
+
+    inlet
+    {
+        type            fixedValue;
+        value           uniform 301.0;
+    }
+
+    outlet
+    {
+        type            inletOutlet;
+        inletValue      uniform 301.0;
+        value           uniform 301.0;
+    }
+
+}
+
+
+// ************************************************************************* //
