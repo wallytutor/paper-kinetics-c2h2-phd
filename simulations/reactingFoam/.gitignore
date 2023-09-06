@@ -3,11 +3,15 @@
 /**/log.gmsh
 /**/log.gmshToFoam
 /**/log.reactingFoam
+/case/constant/polyMesh/
 
-# Do not commit mesh or mechanisms at this level.
-/**/constant/polyMesh
-/**/constant/reactions
-/**/constant/thermo
+# Files copied from base case.
+/**/constant/
+/**/system/
+!/case/constant/
+!/case/system/
+
+# Ignore intermediate mesh.
 *.msh
 
 # Files used to open Paraview.

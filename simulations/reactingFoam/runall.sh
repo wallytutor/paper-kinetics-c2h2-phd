@@ -11,8 +11,9 @@ function reactingFoamCaseRun()
     casename=${1}
     casedir=${HERE}/${casename}
 
-    # Copy mesh to case directory.
-    cp -avr ${HERE}/case/constant/polyMesh  ${casedir}/constant/
+    # Copy common files to new case.
+    cp -avr ${HERE}/case/constant/  ${casedir}/constant/
+    cp -avr ${HERE}/case/system/  ${casedir}/system/
 
     # Copy mechanism and thermodynamics data to case.
     # Here we are only using dalmazsi-2017 mechanism.
