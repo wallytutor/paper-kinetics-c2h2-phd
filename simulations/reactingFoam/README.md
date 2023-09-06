@@ -1,5 +1,9 @@
 # Wedge reactor simulation
 
+## About cases
+
+Directory [reference](reference/) keeps old versions of the cases with a worse fitting of wall temperature. These are kept for reference only and are not used in the paper. All cases that are actually cited are found under this same parent directory.
+
 ## Running the cases
 
 1. Enter [case](case/) and generate mesh with `generatemesh.sh`.
