@@ -16,13 +16,13 @@ end
 
 # ╔═╡ f76d6a60-4a31-11ee-0ce2-cd0ad9ac9fe9
 begin
-	using CSV
-	using DataFrames
-	using LsqFit
-	using Plots
-	using PlutoUI
-	using Printf
-	using YAML
+    using CSV
+    using DataFrames
+    using LsqFit
+    using Plots
+    using PlutoUI
+    using Printf
+    using YAML
 end
 
 # ╔═╡ a9ff6759-a205-422b-b08b-7a078f1819e0
@@ -32,73 +32,73 @@ md"""
 
 # ╔═╡ e9b1862e-ba94-4801-b18d-666753c02fb2
 begin
-	println("Data loading")
-	data = YAML.load_file("../data/conditions.yaml")["wall_temperature"]
-	splist = filter(x->isa(x, Number), keys(data)) |> collect |> sort
+    println("Data loading")
+    data = YAML.load_file("../data/conditions.yaml")["wall_temperature"]
+    splist = filter(x->isa(x, Number), keys(data)) |> collect |> sort
 end;
 
 # ╔═╡ 3e4990fd-7761-4b2e-9e6e-e23e49fe2679
 begin
-	Y(y, x, a) = @. y(x, a[1], a[3]) - y(x, a[2], a[4])
-	
-	f(x, x₀, m) = (1 + exp(-x / x₀))^(-m)
-	g(x, x₀, m) = 1 - exp(-(x / x₀)^m)
+    Y(y, x, a) = @. y(x, a[1], a[3]) - y(x, a[2], a[4])
 
-	F(x, a) = Y(f, x, a)
-	G(x, a) = Y(g, x, a)
+    f(x, x₀, m) = (1 + exp(-x / x₀))^(-m)
+    g(x, x₀, m) = 1 - exp(-(x / x₀)^m)
 
-	println("Unhide for functions used in model fitting")
+    F(x, a) = Y(f, x, a)
+    G(x, a) = Y(g, x, a)
+
+    println("Unhide for functions used in model fitting")
 end
 
 # ╔═╡ 1aa7384d-5834-47c8-9105-c01a38d45084
 function fit_profile(x, y)
-	T_min = minimum(y)
-	T_max = maximum(y)
-	ΔT = T_max - T_min
-	y = @. (y - T_min) / ΔT
-	
-	lb = [0.0,   0.0,   0.0, 0.0]
-	ub = [Inf,   Inf,   Inf, Inf]
+    T_min = minimum(y)
+    T_max = maximum(y)
+    ΔT = T_max - T_min
+    y = @. (y - T_min) / ΔT
 
-	p0 = [0.01, 0.05, 10^3, 10^4]
-	fit_f = curve_fit(F, x, y, p0, lower=lb, upper=ub)
+    lb = [0.0,   0.0,   0.0, 0.0]
+    ub = [Inf,   Inf,   Inf, Inf]
 
-	p0 = [0.10, 0.50, 10^1, 10^1]
-	fit_g = curve_fit(G, x, y, p0, lower=lb, upper=ub)
+    p0 = [0.01, 0.05, 10^3, 10^4]
+    fit_f = curve_fit(F, x, y, p0, lower=lb, upper=ub)
 
-	return (fit_f.param, fit_g.param, ΔT, T_min)
+    p0 = [0.10, 0.50, 10^1, 10^1]
+    fit_g = curve_fit(G, x, y, p0, lower=lb, upper=ub)
+
+    return (fit_f.param, fit_g.param, ΔT, T_min)
 end
 
 # ╔═╡ a963f2c9-1259-42c0-a863-d9f5d3ecc721
 function makecode(a, ΔT, T_min, sp)
-	"""
-	// $(sp) K
-	type  codedFixedValue;
-	value \$internalField;
-	name  wall_temperature_bc;
+    """
+    // $(sp) K
+    type  codedFixedValue;
+    value \$internalField;
+    name  wall_temperature_bc;
 
-	code
-	#{
-		double a1 = $(@sprintf("%.15e", a[1]));
-		double a2 = $(@sprintf("%.15e", a[2]));
-		double m1 = $(@sprintf("%.15e", a[3]));
-		double m2 = $(@sprintf("%.15e", a[4]));
-		double Tamp = $(@sprintf("%.3f", ΔT));
-		double Tmin = $(@sprintf("%.3f", T_min));
+    code
+    #{
+        double a1 = $(@sprintf("%.15e", a[1]));
+        double a2 = $(@sprintf("%.15e", a[2]));
+        double m1 = $(@sprintf("%.15e", a[3]));
+        double m2 = $(@sprintf("%.15e", a[4]));
+        double Tamp = $(@sprintf("%.3f", ΔT));
+        double Tmin = $(@sprintf("%.3f", T_min));
 
-		vector axisX = vector(1, 0, 0);
-		scalarField x = (patch().Cf() & axisX);
+        vector axisX = vector(1, 0, 0);
+        scalarField x = (patch().Cf() & axisX);
 
-		// f(x) = (1 + exp(-x / x₀))^(-m)
-		scalarField Tu = Foam::pow(1 + Foam::exp(-x / a1), -m1);
-		scalarField Td = Foam::pow(1 + Foam::exp(-x / a2), -m2);
+        // f(x) = (1 + exp(-x / x₀))^(-m)
+        scalarField Tu = Foam::pow(1 + Foam::exp(-x / a1), -m1);
+        scalarField Td = Foam::pow(1 + Foam::exp(-x / a2), -m2);
 
-		// F(x) = (f(xu) - f(xd)) * Tamp + Tmin
-		scalarField Tval = (Tu - Td) * Tamp + Tmin;
-		operator==(Tval);
-	#};
-	
-	"""
+        // F(x) = (f(xu) - f(xd)) * Tamp + Tmin
+        scalarField Tval = (Tu - Td) * Tamp + Tmin;
+        operator==(Tval);
+    #};
+
+    """
 end
 
 # ╔═╡ 03f406fd-6b03-4a8f-b6d2-ff437e81b5fd
@@ -110,29 +110,29 @@ Tₛ  = $(@bind Tₛ Slider(splist, show_value=true))
 
 # ╔═╡ e08072b0-5795-44c3-9bce-e9103b0bcf22
 let
-	x0 = data["x"]
-	y0 = data[convert(Int, Tₛ)]
-		
-	af, ag, ΔT, T_min = fit_profile(x0, y0)
+    x0 = data["x"]
+    y0 = data[convert(Int, Tₛ)]
 
-	xf = collect(0.0:0.001:0.6)
-	yf = F(xf, af) * ΔT .+ T_min
-	yg = G(xf, ag) * ΔT .+ T_min
+    af, ag, ΔT, T_min = fit_profile(x0, y0)
 
-	f0 = F(x0, af) * ΔT .+ T_min
-	g0 = G(x0, ag) * ΔT .+ T_min
-	
-	εf = log10(sum(abs2.(f0 - y0)))
-	εg = log10(sum(abs2.(g0 - y0)))
-	
-	plot()
-	scatter!(x0, y0, label=nothing)
-	plot!(xf, yf, label="F($(@sprintf("%.2f", εf)))")
-	plot!(xf, yg, label="G($(@sprintf("%.2f", εg)))")
-	
-	title!("Temperature profile")
-	xlabel!("Position [m]")
-	ylabel!("Temperature [K]")
+    xf = collect(0.0:0.001:0.6)
+    yf = F(xf, af) * ΔT .+ T_min
+    yg = G(xf, ag) * ΔT .+ T_min
+
+    f0 = F(x0, af) * ΔT .+ T_min
+    g0 = G(x0, ag) * ΔT .+ T_min
+
+    εf = log10(sum(abs2.(f0 - y0)))
+    εg = log10(sum(abs2.(g0 - y0)))
+
+    plot()
+    scatter!(x0, y0, label=nothing)
+    plot!(xf, yf, label="F($(@sprintf("%.2f", εf)))")
+    plot!(xf, yg, label="G($(@sprintf("%.2f", εg)))")
+
+    title!("Temperature profile")
+    xlabel!("Position [m]")
+    ylabel!("Temperature [K]")
 end
 
 # ╔═╡ e5cf07cf-e6d7-4360-a6b3-67448e6bfcc6
@@ -142,12 +142,12 @@ md"""
 
 # ╔═╡ 8bcd6d31-5dc0-499c-8d3f-5e99a7c8c52f
 open("wall-temperature.txt", "w") do fp
-	for sp in splist
-		x = data["x"]
-		y = data[convert(Int, sp)]
-		a, _, ΔT, T_min = fit_profile(x, y)
-		write(fp, makecode(a, ΔT, T_min, sp))
-	end
+    for sp in splist
+        x = data["x"]
+        y = data[convert(Int, sp)]
+        a, _, ΔT, T_min = fit_profile(x, y)
+        write(fp, makecode(a, ΔT, T_min, sp))
+    end
 end
 
 # ╔═╡ 00000000-0000-0000-0000-000000000001

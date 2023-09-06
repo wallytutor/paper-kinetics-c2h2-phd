@@ -1,7 +1,7 @@
 /*--------------------------------*- C++ -*----------------------------------*\
 | =========                 |                                                 |
 | \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
-|  \\    /   O peration     | Version:  v2106                                 |
+|  \\    /   O peration     | Version:  v2212                                 |
 |   \\  /    A nd           | Website:  www.openfoam.com                      |
 |    \\/     M anipulation  |                                                 |
 \*---------------------------------------------------------------------------*/
@@ -22,19 +22,19 @@ startTime         0;
 
 stopAt            endTime;
 
-endTime           10000000.0;
+endTime           1.0;
 
-deltaT            1;
+deltaT            1.0e-07;
 
-writeControl      runTime;
+writeControl      adjustable;
 
-writeInterval     0.1;
+writeInterval     0.05;
 
 purgeWrite        0;
 
 writeFormat       ascii;
 
-writePrecision    6;
+writePrecision    10;
 
 writeCompression  off;
 
@@ -44,9 +44,57 @@ timePrecision     8;
 
 runTimeModifiable true;
 
-maxCo             0.2;
-
 adjustTimeStep    yes;
+
+maxCo             0.4;
+
+
+functions
+{
+    // Documentation for this at
+    // https://www.openfoam.com/documentation/guides/v2112/doc/
+    //   guide-fos-field-surfaceFieldValue.html
+    //
+    // Sample case at
+    // https://develop.openfoam.com/Development/openfoam/-/blob/
+    //   master/tutorials/lagrangian/reactingParcelFoam/
+    //   verticalChannel/system/controlDict
+    avgOutlets
+    {
+        // Mandatory entries (unmodifiable)
+        type            surfaceFieldValue;
+        libs            (fieldFunctionObjects);
+
+        // Mandatory entries (runtime modifiable)
+        fields          ( C2H2 H2 CH4 C2H4 C4H4 T );
+        operation       weightedAverage;
+        regionType      patch;
+        name            outlet;
+
+        // Optional entries (runtime modifiable)
+        postOperation   none;
+        weightField     phi;
+        scaleFactor     1.0;
+        writeArea       false;
+        surfaceFormat   none;
+
+        // Optional (inherited) entries
+        writeFields     false;
+        scalingFactor   1.0;
+        writePrecision  8;
+        writeToFile     true;
+        useUserTime     true;
+        region          region0;
+        enabled         true;
+        log             true;
+        timeStart       0;
+        timeEnd         1000;
+        executeControl  timeStep;
+        executeInterval 1;
+        writeControl    writeTime;
+        writeInterval   1;
+    }
+}
 
 
 // ************************************************************************* //

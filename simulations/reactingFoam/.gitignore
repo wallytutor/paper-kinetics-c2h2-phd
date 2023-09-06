@@ -10,5 +10,8 @@
 /**/constant/thermo
 *.msh
 
+# Files used to open Paraview.
+case.foam
+
 # Any new case on waiting list.
 *-new/

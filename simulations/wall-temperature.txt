@@ -5,23 +5,23 @@ name  wall_temperature_bc;
 
 code
 #{
-	double a1 = 1.892405585445914e-02;
-	double a2 = 4.611477010421670e-02;
-	double m1 = 8.171962199093433e+02;
-	double m2 = 1.787908201868094e+04;
-	double Tamp = 465.000;
-	double Tmin = 298.000;
+    double a1 = 1.892405585445914e-02;
+    double a2 = 4.611477010421670e-02;
+    double m1 = 8.171962199093433e+02;
+    double m2 = 1.787908201868094e+04;
+    double Tamp = 465.000;
+    double Tmin = 298.000;
 
-	vector axisX = vector(1, 0, 0);
-	scalarField x = (patch().Cf() & axisX);
+    vector axisX = vector(1, 0, 0);
+    scalarField x = (patch().Cf() & axisX);
 
-	// f(x) = (1 + exp(-x / x₀))^(-m)
-	scalarField Tu = Foam::pow(1 + Foam::exp(-x / a1), -m1);
-	scalarField Td = Foam::pow(1 + Foam::exp(-x / a2), -m2);
+    // f(x) = (1 + exp(-x / x₀))^(-m)
+    scalarField Tu = Foam::pow(1 + Foam::exp(-x / a1), -m1);
+    scalarField Td = Foam::pow(1 + Foam::exp(-x / a2), -m2);
 
-	// F(x) = (f(xu) - f(xd)) * Tamp + Tmin
-	scalarField Tval = (Tu - Td) * Tamp + Tmin;
-	operator==(Tval);
+    // F(x) = (f(xu) - f(xd)) * Tamp + Tmin
+    scalarField Tval = (Tu - Td) * Tamp + Tmin;
+    operator==(Tval);
 #};
 
 // 873 K
@@ -31,23 +31,23 @@ name  wall_temperature_bc;
 
 code
 #{
-	double a1 = 2.221018589649365e-02;
-	double a2 = 4.793822440735570e-02;
-	double m1 = 2.155778984613401e+02;
-	double m2 = 1.497008289516198e+04;
-	double Tamp = 571.000;
-	double Tmin = 298.000;
+    double a1 = 2.221018589649365e-02;
+    double a2 = 4.793822440735570e-02;
+    double m1 = 2.155778984613401e+02;
+    double m2 = 1.497008289516198e+04;
+    double Tamp = 571.000;
+    double Tmin = 298.000;
 
-	vector axisX = vector(1, 0, 0);
-	scalarField x = (patch().Cf() & axisX);
+    vector axisX = vector(1, 0, 0);
+    scalarField x = (patch().Cf() & axisX);
 
-	// f(x) = (1 + exp(-x / x₀))^(-m)
-	scalarField Tu = Foam::pow(1 + Foam::exp(-x / a1), -m1);
-	scalarField Td = Foam::pow(1 + Foam::exp(-x / a2), -m2);
+    // f(x) = (1 + exp(-x / x₀))^(-m)
+    scalarField Tu = Foam::pow(1 + Foam::exp(-x / a1), -m1);
+    scalarField Td = Foam::pow(1 + Foam::exp(-x / a2), -m2);
 
-	// F(x) = (f(xu) - f(xd)) * Tamp + Tmin
-	scalarField Tval = (Tu - Td) * Tamp + Tmin;
-	operator==(Tval);
+    // F(x) = (f(xu) - f(xd)) * Tamp + Tmin
+    scalarField Tval = (Tu - Td) * Tamp + Tmin;
+    operator==(Tval);
 #};
 
 // 973 K
@@ -57,23 +57,23 @@ name  wall_temperature_bc;
 
 code
 #{
-	double a1 = 2.160490151803194e-02;
-	double a2 = 4.796352904239693e-02;
-	double m1 = 1.703263937366005e+02;
-	double m2 = 1.559634776111978e+04;
-	double Tamp = 673.000;
-	double Tmin = 298.000;
+    double a1 = 2.160490151803194e-02;
+    double a2 = 4.796352904239693e-02;
+    double m1 = 1.703263937366005e+02;
+    double m2 = 1.559634776111978e+04;
+    double Tamp = 673.000;
+    double Tmin = 298.000;
 
-	vector axisX = vector(1, 0, 0);
-	scalarField x = (patch().Cf() & axisX);
+    vector axisX = vector(1, 0, 0);
+    scalarField x = (patch().Cf() & axisX);
 
-	// f(x) = (1 + exp(-x / x₀))^(-m)
-	scalarField Tu = Foam::pow(1 + Foam::exp(-x / a1), -m1);
-	scalarField Td = Foam::pow(1 + Foam::exp(-x / a2), -m2);
+    // f(x) = (1 + exp(-x / x₀))^(-m)
+    scalarField Tu = Foam::pow(1 + Foam::exp(-x / a1), -m1);
+    scalarField Td = Foam::pow(1 + Foam::exp(-x / a2), -m2);
 
-	// F(x) = (f(xu) - f(xd)) * Tamp + Tmin
-	scalarField Tval = (Tu - Td) * Tamp + Tmin;
-	operator==(Tval);
+    // F(x) = (f(xu) - f(xd)) * Tamp + Tmin
+    scalarField Tval = (Tu - Td) * Tamp + Tmin;
+    operator==(Tval);
 #};
 
 // 1023 K
@@ -83,23 +83,23 @@ name  wall_temperature_bc;
 
 code
 #{
-	double a1 = 3.147881884615514e-02;
-	double a2 = 4.623437389184707e-02;
-	double m1 = 2.623728125300871e+01;
-	double m2 = 2.531630858235257e+04;
-	double Tamp = 720.000;
-	double Tmin = 298.000;
+    double a1 = 3.147881884615514e-02;
+    double a2 = 4.623437389184707e-02;
+    double m1 = 2.623728125300871e+01;
+    double m2 = 2.531630858235257e+04;
+    double Tamp = 720.000;
+    double Tmin = 298.000;
 
-	vector axisX = vector(1, 0, 0);
-	scalarField x = (patch().Cf() & axisX);
+    vector axisX = vector(1, 0, 0);
+    scalarField x = (patch().Cf() & axisX);
 
-	// f(x) = (1 + exp(-x / x₀))^(-m)
-	scalarField Tu = Foam::pow(1 + Foam::exp(-x / a1), -m1);
-	scalarField Td = Foam::pow(1 + Foam::exp(-x / a2), -m2);
+    // f(x) = (1 + exp(-x / x₀))^(-m)
+    scalarField Tu = Foam::pow(1 + Foam::exp(-x / a1), -m1);
+    scalarField Td = Foam::pow(1 + Foam::exp(-x / a2), -m2);
 
-	// F(x) = (f(xu) - f(xd)) * Tamp + Tmin
-	scalarField Tval = (Tu - Td) * Tamp + Tmin;
-	operator==(Tval);
+    // F(x) = (f(xu) - f(xd)) * Tamp + Tmin
+    scalarField Tval = (Tu - Td) * Tamp + Tmin;
+    operator==(Tval);
 #};
 
 // 1073 K
@@ -109,23 +109,23 @@ name  wall_temperature_bc;
 
 code
 #{
-	double a1 = 3.097798414047586e-02;
-	double a2 = 4.366041824855620e-02;
-	double m1 = 2.838360753665992e+01;
-	double m2 = 5.215611960452131e+04;
-	double Tamp = 766.000;
-	double Tmin = 298.000;
+    double a1 = 3.097798414047586e-02;
+    double a2 = 4.366041824855620e-02;
+    double m1 = 2.838360753665992e+01;
+    double m2 = 5.215611960452131e+04;
+    double Tamp = 766.000;
+    double Tmin = 298.000;
 
-	vector axisX = vector(1, 0, 0);
-	scalarField x = (patch().Cf() & axisX);
+    vector axisX = vector(1, 0, 0);
+    scalarField x = (patch().Cf() & axisX);
 
-	// f(x) = (1 + exp(-x / x₀))^(-m)
-	scalarField Tu = Foam::pow(1 + Foam::exp(-x / a1), -m1);
-	scalarField Td = Foam::pow(1 + Foam::exp(-x / a2), -m2);
+    // f(x) = (1 + exp(-x / x₀))^(-m)
+    scalarField Tu = Foam::pow(1 + Foam::exp(-x / a1), -m1);
+    scalarField Td = Foam::pow(1 + Foam::exp(-x / a2), -m2);
 
-	// F(x) = (f(xu) - f(xd)) * Tamp + Tmin
-	scalarField Tval = (Tu - Td) * Tamp + Tmin;
-	operator==(Tval);
+    // F(x) = (f(xu) - f(xd)) * Tamp + Tmin
+    scalarField Tval = (Tu - Td) * Tamp + Tmin;
+    operator==(Tval);
 #};
 
 // 1123 K
@@ -135,23 +135,23 @@ name  wall_temperature_bc;
 
 code
 #{
-	double a1 = 2.953667983800196e-02;
-	double a2 = 4.275989314777971e-02;
-	double m1 = 3.448221829504725e+01;
-	double m2 = 6.548900369982966e+04;
-	double Tamp = 812.000;
-	double Tmin = 298.000;
+    double a1 = 2.953667983800196e-02;
+    double a2 = 4.275989314777971e-02;
+    double m1 = 3.448221829504725e+01;
+    double m2 = 6.548900369982966e+04;
+    double Tamp = 812.000;
+    double Tmin = 298.000;
 
-	vector axisX = vector(1, 0, 0);
-	scalarField x = (patch().Cf() & axisX);
+    vector axisX = vector(1, 0, 0);
+    scalarField x = (patch().Cf() & axisX);
 
-	// f(x) = (1 + exp(-x / x₀))^(-m)
-	scalarField Tu = Foam::pow(1 + Foam::exp(-x / a1), -m1);
-	scalarField Td = Foam::pow(1 + Foam::exp(-x / a2), -m2);
+    // f(x) = (1 + exp(-x / x₀))^(-m)
+    scalarField Tu = Foam::pow(1 + Foam::exp(-x / a1), -m1);
+    scalarField Td = Foam::pow(1 + Foam::exp(-x / a2), -m2);
 
-	// F(x) = (f(xu) - f(xd)) * Tamp + Tmin
-	scalarField Tval = (Tu - Td) * Tamp + Tmin;
-	operator==(Tval);
+    // F(x) = (f(xu) - f(xd)) * Tamp + Tmin
+    scalarField Tval = (Tu - Td) * Tamp + Tmin;
+    operator==(Tval);
 #};
 
 // 1173 K
@@ -161,23 +161,23 @@ name  wall_temperature_bc;
 
 code
 #{
-	double a1 = 2.820401205598533e-02;
-	double a2 = 4.198011700756328e-02;
-	double m1 = 4.196315373119852e+01;
-	double m2 = 8.025525887405114e+04;
-	double Tamp = 858.000;
-	double Tmin = 298.000;
+    double a1 = 2.820401205598533e-02;
+    double a2 = 4.198011700756328e-02;
+    double m1 = 4.196315373119852e+01;
+    double m2 = 8.025525887405114e+04;
+    double Tamp = 858.000;
+    double Tmin = 298.000;
 
-	vector axisX = vector(1, 0, 0);
-	scalarField x = (patch().Cf() & axisX);
+    vector axisX = vector(1, 0, 0);
+    scalarField x = (patch().Cf() & axisX);
 
-	// f(x) = (1 + exp(-x / x₀))^(-m)
-	scalarField Tu = Foam::pow(1 + Foam::exp(-x / a1), -m1);
-	scalarField Td = Foam::pow(1 + Foam::exp(-x / a2), -m2);
+    // f(x) = (1 + exp(-x / x₀))^(-m)
+    scalarField Tu = Foam::pow(1 + Foam::exp(-x / a1), -m1);
+    scalarField Td = Foam::pow(1 + Foam::exp(-x / a2), -m2);
 
-	// F(x) = (f(xu) - f(xd)) * Tamp + Tmin
-	scalarField Tval = (Tu - Td) * Tamp + Tmin;
-	operator==(Tval);
+    // F(x) = (f(xu) - f(xd)) * Tamp + Tmin
+    scalarField Tval = (Tu - Td) * Tamp + Tmin;
+    operator==(Tval);
 #};
 
 // 1223 K
@@ -187,23 +187,23 @@ name  wall_temperature_bc;
 
 code
 #{
-	double a1 = 2.709937869701239e-02;
-	double a2 = 4.268991695245227e-02;
-	double m1 = 5.135781138658629e+01;
-	double m2 = 6.184192413919863e+04;
-	double Tamp = 907.000;
-	double Tmin = 298.000;
+    double a1 = 2.709937869701239e-02;
+    double a2 = 4.268991695245227e-02;
+    double m1 = 5.135781138658629e+01;
+    double m2 = 6.184192413919863e+04;
+    double Tamp = 907.000;
+    double Tmin = 298.000;
 
-	vector axisX = vector(1, 0, 0);
-	scalarField x = (patch().Cf() & axisX);
+    vector axisX = vector(1, 0, 0);
+    scalarField x = (patch().Cf() & axisX);
 
-	// f(x) = (1 + exp(-x / x₀))^(-m)
-	scalarField Tu = Foam::pow(1 + Foam::exp(-x / a1), -m1);
-	scalarField Td = Foam::pow(1 + Foam::exp(-x / a2), -m2);
+    // f(x) = (1 + exp(-x / x₀))^(-m)
+    scalarField Tu = Foam::pow(1 + Foam::exp(-x / a1), -m1);
+    scalarField Td = Foam::pow(1 + Foam::exp(-x / a2), -m2);
 
-	// F(x) = (f(xu) - f(xd)) * Tamp + Tmin
-	scalarField Tval = (Tu - Td) * Tamp + Tmin;
-	operator==(Tval);
+    // F(x) = (f(xu) - f(xd)) * Tamp + Tmin
+    scalarField Tval = (Tu - Td) * Tamp + Tmin;
+    operator==(Tval);
 #};
 
 // 1273 K
@@ -213,22 +213,22 @@ name  wall_temperature_bc;
 
 code
 #{
-	double a1 = 2.616985109607736e-02;
-	double a2 = 4.315000209767096e-02;
-	double m1 = 6.166012143922917e+01;
-	double m2 = 5.155838806635470e+04;
-	double Tamp = 955.000;
-	double Tmin = 298.000;
+    double a1 = 2.616985109607736e-02;
+    double a2 = 4.315000209767096e-02;
+    double m1 = 6.166012143922917e+01;
+    double m2 = 5.155838806635470e+04;
+    double Tamp = 955.000;
+    double Tmin = 298.000;
 
-	vector axisX = vector(1, 0, 0);
-	scalarField x = (patch().Cf() & axisX);
+    vector axisX = vector(1, 0, 0);
+    scalarField x = (patch().Cf() & axisX);
 
-	// f(x) = (1 + exp(-x / x₀))^(-m)
-	scalarField Tu = Foam::pow(1 + Foam::exp(-x / a1), -m1);
-	scalarField Td = Foam::pow(1 + Foam::exp(-x / a2), -m2);
+    // f(x) = (1 + exp(-x / x₀))^(-m)
+    scalarField Tu = Foam::pow(1 + Foam::exp(-x / a1), -m1);
+    scalarField Td = Foam::pow(1 + Foam::exp(-x / a2), -m2);
 
-	// F(x) = (f(xu) - f(xd)) * Tamp + Tmin
-	scalarField Tval = (Tu - Td) * Tamp + Tmin;
-	operator==(Tval);
+    // F(x) = (f(xu) - f(xd)) * Tamp + Tmin
+    scalarField Tval = (Tu - Td) * Tamp + Tmin;
+    operator==(Tval);
 #};
 
