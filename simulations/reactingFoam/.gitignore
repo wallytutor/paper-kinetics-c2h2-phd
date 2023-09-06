@@ -1,15 +1,22 @@
-## These will be commited once project is finished:
+## Any calculation logs:
+/**/log.decomposePar
 /**/log.checkMesh
 /**/log.gmsh
 /**/log.gmshToFoam
 /**/log.reactingFoam
+
+## These will be commited once project is finished:
 /case/constant/polyMesh/
 
-# Files copied from base case.
+## Files copied from base case.
 /**/constant/
 /**/system/
 !/case/constant/
 !/case/system/
+
+## Foam and parallel run:
+dynamicCode/
+processor*/
 
 # Ignore intermediate mesh.
 *.msh

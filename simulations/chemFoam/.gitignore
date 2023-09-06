@@ -1,13 +1,15 @@
+## Any calculation logs:
+/**/log.chemFoam
+
+## These will be commited once project is finished:
+/**/chemFoam.out
+
 ## These are generated automatically:
 /**/0.000000/
 /**/1.000000/
 
-# Files copied from base case.
+## Files copied from base case.
 /**/constant/
 /**/system/
 !/case/constant/
 !/case/system/
-
-## These will be commited once project is finished:
-/**/log.chemFoam
-/**/chemFoam.out
