@@ -32,11 +32,11 @@ function reactingFoamCaseRun()
 # reactingFoamCaseRun 004
 # reactingFoamCaseRun 005
 # reactingFoamCaseRun 006
-reactingFoamCaseRun 007
-# reactingFoamCaseRun 008
-# reactingFoamCaseRun 009
-# reactingFoamCaseRun 010
-# reactingFoamCaseRun 011
-# reactingFoamCaseRun 012
-# reactingFoamCaseRun 013
-# reactingFoamCaseRun 014
+# reactingFoamCaseRun 007
+reactingFoamCaseRun 008-new
+# reactingFoamCaseRun 009-new
+# reactingFoamCaseRun 010-new
+# reactingFoamCaseRun 011-new
+# reactingFoamCaseRun 012-new
+# reactingFoamCaseRun 013-new
+# reactingFoamCaseRun 014-new
