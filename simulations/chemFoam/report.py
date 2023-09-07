@@ -24,7 +24,7 @@ with open(project_root / "data/conditions.yaml") as fp:
 assert np.isclose(1.0, sum(data["X"].values()))
 
 # Load helper module with all tools from project.
-module_path = str(project_root / "papertools.py")
+module_path = str(project_root / "simulations/paper-tools.py")
 source = SourceFileLoader("papertools", module_path)
 papertools = source.load_module()
 
