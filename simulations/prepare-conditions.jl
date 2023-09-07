@@ -107,18 +107,6 @@ md"""
 ## Initialize chemFoam
 """
 
-# ╔═╡ 46bb916d-0295-4f9b-a093-4c826fef85a1
-begin
-	_ = open("chemFoam/case/constant/initialConditions", "w") do fp
-		write(fp, getcompositionfile(;
-				T = conditions["reference_case"]["T"],	
-				p = conditions["reference_case"]["P"],	
-				acetylene = conditions["reference_case"]["relative_acetylene"]
-			)
-		)
-	end
-end;
-
 # ╔═╡ beaba0ae-9e7b-43b4-a649-755178e4a5f2
 md"""
 # Utilities
@@ -244,6 +232,21 @@ function chemFoam_initialConditions(; T, p, acetylene = 0.36)
 	// ************************************************************************* //
 	"""
 end
+
+# ╔═╡ 46bb916d-0295-4f9b-a093-4c826fef85a1
+begin
+	_ = open("chemFoam/case/constant/initialConditions", "w") do fp
+		write(fp, chemFoam_initialConditions(;
+				T = conditions["reference_case"]["T"],	
+				p = conditions["reference_case"]["P"],	
+				acetylene = conditions["reference_case"]["relative_acetylene"]
+			)
+		)
+	end
+end;
+
+# ╔═╡ 7cb71ad6-0f5a-4fe8-96b7-ca1c64feca95
+
 
 # ╔═╡ 00000000-0000-0000-0000-000000000001
 PLUTO_PROJECT_TOML_CONTENTS = """
@@ -606,6 +609,7 @@ version = "17.4.0+0"
 # ╟─2048ad53-0aa0-4bb8-b87c-5cbb33a91440
 # ╟─c22aa8e5-6e28-4fda-af52-21f762feb21a
 # ╟─589c6683-bf8e-43a3-8c59-4cc78c6d8242
-# ╠═5117ee30-2fae-4888-acc9-9c7a8fe6148b
+# ╟─5117ee30-2fae-4888-acc9-9c7a8fe6148b
+# ╠═7cb71ad6-0f5a-4fe8-96b7-ca1c64feca95
 # ╟─00000000-0000-0000-0000-000000000001
 # ╟─00000000-0000-0000-0000-000000000002
