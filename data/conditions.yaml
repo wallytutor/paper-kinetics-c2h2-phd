@@ -8,8 +8,8 @@ R: 0.028
 # Acetylene composition in bottle [mole fractions].
 acetylene_bottle:
   C2H2: 0.98
-  CH3COCH3: 0.18
-  CH4: 0.02
+  CH3COCH3: 0.018
+  CH4: 0.002
 
 ##############################################################################
 # Wall temperature measurements and artificially added extremities
