@@ -22,12 +22,12 @@ paper_theme = Theme(
         xgridwidth = 3.0,
         ygridwidth = 3.0
     ),
-    
+
     Lines = (
         linewidth   = 2.5,
         linestyle   = :dash
     ),
-    
+
     Scatter = (
         markersize  = 30,
         strokewidth = 1.5,
@@ -36,7 +36,7 @@ paper_theme = Theme(
     ),
 
     Legend = (
-        framevisible = false, 
+        framevisible = false,
         labelsize    = 36,
     ),
 )
