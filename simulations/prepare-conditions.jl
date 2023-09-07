@@ -6,8 +6,9 @@ using InteractiveUtils
 
 # ╔═╡ 291dc1e4-2978-4914-ada8-7cd7a20c7269
 begin
-	using DataFrames
-	using YAML
+    using DataFrames
+    using Printf
+    using YAML
 end
 
 # ╔═╡ 9bd74542-e15a-4a48-b305-00802dd3529d
@@ -98,6 +99,14 @@ The following results were obtained in the first run of the study.
 </table>
 """
 
+# ╔═╡ 478de65d-c59e-45a7-ad40-3a6124330968
+conditions = YAML.load_file("../data/conditions.yaml");
+
+# ╔═╡ d545fa97-f0ac-48db-8d6a-31a53ddadb4e
+md"""
+## Initialize chemFoam
+"""
+
 # ╔═╡ beaba0ae-9e7b-43b4-a649-755178e4a5f2
 md"""
 # Utilities
@@ -121,13 +130,13 @@ const M3_PER_CM3::Float64 = 1 / (10^2)^3
 
 # ╔═╡ 589c6683-bf8e-43a3-8c59-4cc78c6d8242
 """
-	standard_flow_to_gas_speed(
-		q::Number;
-		T_work::Number = 298.15,
-		P_work::Number = P_STANDARD,
-		A_cross::Number = 1.0
-	)::Float64		
-		
+    standard_flow_to_gas_speed(
+        q::Number;
+        T_work::Number = 298.15,
+        P_work::Number = P_STANDARD,
+        A_cross::Number = 1.0
+    )::Float64		
+        
 Convert laboratory gas flow in Scm³/min to mean speed in m/s.
 
 - `q::Number`: Flow rate to be converted in Scm³/min (sccm).
@@ -136,40 +145,38 @@ Convert laboratory gas flow in Scm³/min to mean speed in m/s.
 - `A_cross::Number = 1.0`: Reactor cross sectional area in squared meters [m²].
 """	
 function standard_flow_to_gas_speed(
-		q::Number,
-		P_work::Number;
-		T_work::Number = 298.15,
-		A_cross::Number = 1.0
-	)::Float64
-	scaler = MIN_PER_SEC * M3_PER_CM3
-	scaler *= P_STANDARD / T_STANDARD
-	return scaler * q * (T_work / P_work) / A_cross
+        q::Number,
+        P_work::Number;
+        T_work::Number = 298.15,
+        A_cross::Number = 1.0
+    )::Float64
+    scaler = MIN_PER_SEC * M3_PER_CM3
+    scaler *= P_STANDARD / T_STANDARD
+    return scaler * q * (T_work / P_work) / A_cross
 end
 
 # ╔═╡ 0cae0c6d-ff7a-4391-a2cb-5454c3f002dc
 df = let
-	conditions = YAML.load_file("../data/conditions.yaml")
-	
-	cases = conditions["all_cases"]
-	needed = ["P", "Q", "T", "outlet_c2h2", "norinaga_c2h2", "dalmazsi_c2h2"]
+    cases = conditions["all_cases"]
+    needed = ["P", "Q", "T", "outlet_c2h2", "norinaga_c2h2", "dalmazsi_c2h2"]
 
-	
-	dfcases = [[cases[k][n] for n in needed] for k in 1:14]
-	df = DataFrame(transpose(hcat(dfcases...)), needed)
+    
+    dfcases = [[cases[k][n] for n in needed] for k in 1:14]
+    df = DataFrame(transpose(hcat(dfcases...)), needed)
 
-	# Pressure from mbar to Pa.
-	df[!, "P"] *= 100
+    # Pressure from mbar to Pa.
+    df[!, "P"] *= 100
 
-	# Flow mean speed.
-	q = df[!, "Q"]
-	P = df[!, "P"]
-	A = π * (conditions["R"] / 2)^2
-	df[!, "U"] = standard_flow_to_gas_speed.(q, P; T_work = 301.0, A_cross = A)
+    # Flow mean speed.
+    q = df[!, "Q"]
+    P = df[!, "P"]
+    A = π * (conditions["R"] / 2)^2
+    df[!, "U"] = standard_flow_to_gas_speed.(q, P; T_work = 301.0, A_cross = A)
 
-	# Flow rate to mass flow.
-	# TODO
+    # Flow rate to mass flow.
+    # TODO
 
-	df
+    df
 end;
 
 # ╔═╡ c7f67408-3475-47cd-9fc6-4ae6a1ebfd17
@@ -179,10 +186,70 @@ md"""
 $(df)
 """
 
+# ╔═╡ 5117ee30-2fae-4888-acc9-9c7a8fe6148b
+function getcompositionfile(; T, p, acetylene = 0.36)
+    x = conditions["acetylene_bottle"]
+    
+    n2       = 1.0 - acetylene
+    c2h2     = acetylene * x["C2H2"]
+    ch3coch3 = acetylene * x["CH3COCH3"]
+    ch4      = acetylene * x["CH4"]
+    
+    template = """\
+    /*--------------------------------*- C++ -*----------------------------------*\\
+    | =========                 |                                                 |
+    | \\\\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
+    |  \\\\    /   O peration     | Version:  v2106                                 |
+    |   \\\\  /    A nd           | Website:  www.openfoam.com                      |
+    |    \\\\/     M anipulation  |                                                 |
+    \\*---------------------------------------------------------------------------*/
+    FoamFile
+    {
+        version     2.0;
+        format      ascii;
+        class       dictionary;
+        object      initialConditions;
+    }
+    // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+    
+    constantProperty    pressure;
+    
+    fractionBasis       mole;
+    
+    fractions
+    {
+        N2              $(@sprintf("%.6f", n2));
+        C2H2            $(@sprintf("%.6f", c2h2));
+        CH3COCH3        $(@sprintf("%.6f", ch3coch3));
+        CH4             $(@sprintf("%.6f", ch4));
+    }
+    
+    p                   $(@sprintf("%.1f", p));
+    
+    T                   $(@sprintf("%.2f", T));
+    
+    
+    // ************************************************************************* //
+    """
+end
+
+# ╔═╡ 46bb916d-0295-4f9b-a093-4c826fef85a1
+begin
+    _ = open("chemFoam/case/constant/initialConditions", "w") do fp
+        write(fp, getcompositionfile(;
+                T = conditions["reference_case"]["T"],	
+                p = conditions["reference_case"]["P"],	
+                acetylene = conditions["reference_case"]["relative_acetylene"]
+            )
+        )
+    end
+end;
+
 # ╔═╡ 00000000-0000-0000-0000-000000000001
 PLUTO_PROJECT_TOML_CONTENTS = """
 [deps]
 DataFrames = "a93c6f00-e57d-5684-b7b6-d8193f3e46c0"
+Printf = "de0858da-6303-5e67-8744-51eddeeeb8d7"
 YAML = "ddb6d928-2868-570f-bddf-ab3f9cf99eb6"
 
 [compat]
@@ -196,7 +263,7 @@ PLUTO_MANIFEST_TOML_CONTENTS = """
 
 julia_version = "1.9.0"
 manifest_format = "2.0"
-project_hash = "134b55389f085a924dc13fc025b9a75e242de175"
+project_hash = "05b18219c2912a34991ba05581f78f5572d806ce"
 
 [[deps.ArgTools]]
 uuid = "0dad84c5-d112-42e6-8d28-ef12dabb789f"
@@ -527,14 +594,18 @@ version = "17.4.0+0"
 # ╔═╡ Cell order:
 # ╟─9bd74542-e15a-4a48-b305-00802dd3529d
 # ╟─adadf1bc-5102-4d56-99c6-38abc45e70d2
-# ╟─291dc1e4-2978-4914-ada8-7cd7a20c7269
+# ╠═291dc1e4-2978-4914-ada8-7cd7a20c7269
+# ╠═478de65d-c59e-45a7-ad40-3a6124330968
 # ╟─c7f67408-3475-47cd-9fc6-4ae6a1ebfd17
 # ╟─0cae0c6d-ff7a-4391-a2cb-5454c3f002dc
+# ╟─d545fa97-f0ac-48db-8d6a-31a53ddadb4e
+# ╠═46bb916d-0295-4f9b-a093-4c826fef85a1
 # ╟─beaba0ae-9e7b-43b4-a649-755178e4a5f2
 # ╟─f9e67faa-5ad1-425c-84e8-f2cdca0e9dad
 # ╟─4368a77f-4408-4480-8c7b-143ff4818d9f
 # ╟─2048ad53-0aa0-4bb8-b87c-5cbb33a91440
 # ╟─c22aa8e5-6e28-4fda-af52-21f762feb21a
 # ╟─589c6683-bf8e-43a3-8c59-4cc78c6d8242
+# ╟─5117ee30-2fae-4888-acc9-9c7a8fe6148b
 # ╟─00000000-0000-0000-0000-000000000001
 # ╟─00000000-0000-0000-0000-000000000002
