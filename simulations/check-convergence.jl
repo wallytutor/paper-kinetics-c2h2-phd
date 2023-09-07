@@ -81,7 +81,7 @@ end
 
 # ╔═╡ 14a6cf4e-5c34-4b44-849f-6ffa3a3ee5be
 begin
-	datapath, _ = getpaths("006")
+	datapath, _ = getpaths("007")
 	readdlm(datapath, comments = true) |> plotsteadycheck
 end
 
@@ -1684,7 +1684,7 @@ version = "3.5.0+0"
 # ╟─944975a6-07db-4eb0-9b87-353757714c8d
 # ╠═14a6cf4e-5c34-4b44-849f-6ffa3a3ee5be
 # ╟─0c033246-1d7a-439f-92c0-6c29c1f00fba
-# ╟─140ac709-852d-477b-ad2a-d40b4060f0d2
+# ╠═140ac709-852d-477b-ad2a-d40b4060f0d2
 # ╟─d0896b31-e0d7-4d29-80a2-5a34874063e2
 # ╠═4303d844-8a39-4165-8000-02d2294387ea
 # ╟─bab4af14-97de-46fc-8265-4140d9d96fb7

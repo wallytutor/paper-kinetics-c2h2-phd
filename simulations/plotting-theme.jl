@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 using CairoMakie: Cycle, Theme
 
-colors = [:black, :red, :blue, :green, :purple]
-marker = [:rect, :dtriangle, :diamond, :xcross, :star4]
+colors = [:black, :red, :blue, :green, :purple, :magenta]
+marker = [:rect, :dtriangle, :diamond, :xcross, :star4, :utriangle]
 
 paper_theme = Theme(
     backgroundcolor  = :white,
