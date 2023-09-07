@@ -30,8 +30,8 @@ function reactingFoamCaseRun()
 
 # List cases to run here.
 # reactingFoamCaseRun 004
-reactingFoamCaseRun 005
-# reactingFoamCaseRun 006
+# reactingFoamCaseRun 005
+reactingFoamCaseRun 006
 # reactingFoamCaseRun 007
 # reactingFoamCaseRun 008
 # reactingFoamCaseRun 009
