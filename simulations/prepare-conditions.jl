@@ -98,21 +98,75 @@ The following results were obtained in the first run of the study.
 </table>
 """
 
+# ╔═╡ beaba0ae-9e7b-43b4-a649-755178e4a5f2
+md"""
+# Utilities
+"""
+
+# ╔═╡ f9e67faa-5ad1-425c-84e8-f2cdca0e9dad
+"Reference temperature at standard condition $(T_STANDARD) K."
+const T_STANDARD::Float64 = 273.15
+
+# ╔═╡ 4368a77f-4408-4480-8c7b-143ff4818d9f
+"Reference pressure at standard condition $(P_STANDARD) Pa."
+const P_STANDARD::Float64 = 101_325.0
+
+# ╔═╡ 2048ad53-0aa0-4bb8-b87c-5cbb33a91440
+"Number of minutes per second."
+const MIN_PER_SEC = 1 / 60
+
+# ╔═╡ c22aa8e5-6e28-4fda-af52-21f762feb21a
+"Number of cubic meters per cubic centimeter."
+const M3_PER_CM3::Float64 = 1 / (10^2)^3
+
+# ╔═╡ 589c6683-bf8e-43a3-8c59-4cc78c6d8242
+"""
+	standard_flow_to_gas_speed(
+		q::Number;
+		T_work::Number = 298.15,
+		P_work::Number = P_STANDARD,
+		A_cross::Number = 1.0
+	)::Float64		
+		
+Convert laboratory gas flow in Scm³/min to mean speed in m/s.
+
+- `q::Number`: Flow rate to be converted in Scm³/min (sccm).
+- `P_work::Number`: Reactor working pressure in pascal [Pa]
+- `T_work::Number = 298.15`: Reactor working temperature in kelvin [K].
+- `A_cross::Number = 1.0`: Reactor cross sectional area in squared meters [m²].
+"""	
+function standard_flow_to_gas_speed(
+		q::Number,
+		P_work::Number;
+		T_work::Number = 298.15,
+		A_cross::Number = 1.0
+	)::Float64
+	scaler = MIN_PER_SEC * M3_PER_CM3
+	scaler *= P_STANDARD / T_STANDARD
+	return scaler * q * (T_work / P_work) / A_cross
+end
+
 # ╔═╡ 0cae0c6d-ff7a-4391-a2cb-5454c3f002dc
 df = let
-	cases = YAML.load_file("../data/conditions.yaml")["all_cases"]
+	conditions = YAML.load_file("../data/conditions.yaml")
+	
+	cases = conditions["all_cases"]
 	needed = ["P", "Q", "T", "outlet_c2h2", "norinaga_c2h2", "dalmazsi_c2h2"]
 
+	
 	dfcases = [[cases[k][n] for n in needed] for k in 1:14]
 	df = DataFrame(transpose(hcat(dfcases...)), needed)
 
 	# Pressure from mbar to Pa.
 	df[!, "P"] *= 100
 
-	# Flow rate to mass flow.
-	# TODO
-
 	# Flow mean speed.
+	q = df[!, "Q"]
+	P = df[!, "P"]
+	A = π * (conditions["R"] / 2)^2
+	df[!, "U"] = standard_flow_to_gas_speed.(q, P; T_work = 301.0, A_cross = A)
+
+	# Flow rate to mass flow.
 	# TODO
 
 	df
@@ -473,8 +527,14 @@ version = "17.4.0+0"
 # ╔═╡ Cell order:
 # ╟─9bd74542-e15a-4a48-b305-00802dd3529d
 # ╟─adadf1bc-5102-4d56-99c6-38abc45e70d2
-# ╠═291dc1e4-2978-4914-ada8-7cd7a20c7269
-# ╠═0cae0c6d-ff7a-4391-a2cb-5454c3f002dc
+# ╟─291dc1e4-2978-4914-ada8-7cd7a20c7269
 # ╟─c7f67408-3475-47cd-9fc6-4ae6a1ebfd17
+# ╟─0cae0c6d-ff7a-4391-a2cb-5454c3f002dc
+# ╟─beaba0ae-9e7b-43b4-a649-755178e4a5f2
+# ╟─f9e67faa-5ad1-425c-84e8-f2cdca0e9dad
+# ╟─4368a77f-4408-4480-8c7b-143ff4818d9f
+# ╟─2048ad53-0aa0-4bb8-b87c-5cbb33a91440
+# ╟─c22aa8e5-6e28-4fda-af52-21f762feb21a
+# ╟─589c6683-bf8e-43a3-8c59-4cc78c6d8242
 # ╟─00000000-0000-0000-0000-000000000001
 # ╟─00000000-0000-0000-0000-000000000002

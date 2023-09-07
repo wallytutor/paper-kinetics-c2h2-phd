@@ -87,7 +87,7 @@ end
 
 # ╔═╡ 140ac709-852d-477b-ad2a-d40b4060f0d2
 begin
-	cases = ["004", "005", "006"]
+	cases = ["004", "005", "006", "007"]
 
 	for caseno in cases
 		datapath, savepath = getpaths(caseno)
@@ -1682,7 +1682,7 @@ version = "3.5.0+0"
 # ╟─393dfada-9025-4778-ad60-7339ef86fa2d
 # ╠═e27d6530-4cbe-11ee-2b02-83ee5f1b8740
 # ╟─944975a6-07db-4eb0-9b87-353757714c8d
-# ╟─14a6cf4e-5c34-4b44-849f-6ffa3a3ee5be
+# ╠═14a6cf4e-5c34-4b44-849f-6ffa3a3ee5be
 # ╟─0c033246-1d7a-439f-92c0-6c29c1f00fba
 # ╟─140ac709-852d-477b-ad2a-d40b4060f0d2
 # ╟─d0896b31-e0d7-4d29-80a2-5a34874063e2
