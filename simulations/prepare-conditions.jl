@@ -98,11 +98,32 @@ The following results were obtained in the first run of the study.
 </table>
 """
 
-# ╔═╡ 32306832-ab83-4337-8411-2c6bf70c1aaa
-cases = YAML.load_file("../data/conditions.yaml")["all_cases"];
+# ╔═╡ 0cae0c6d-ff7a-4391-a2cb-5454c3f002dc
+df = let
+	cases = YAML.load_file("../data/conditions.yaml")["all_cases"]
+	needed = ["P", "Q", "T", "outlet_c2h2", "norinaga_c2h2", "dalmazsi_c2h2"]
 
-# ╔═╡ ca28059c-3b7d-4efa-865a-42f1e816f525
-values(cases)
+	dfcases = [[cases[k][n] for n in needed] for k in 1:14]
+	df = DataFrame(transpose(hcat(dfcases...)), needed)
+
+	# Pressure from mbar to Pa.
+	df[!, "P"] *= 100
+
+	# Flow rate to mass flow.
+	# TODO
+
+	# Flow mean speed.
+	# TODO
+
+	df
+end;
+
+# ╔═╡ c7f67408-3475-47cd-9fc6-4ae6a1ebfd17
+md"""
+## Table of conditions
+
+$(df)
+"""
 
 # ╔═╡ 00000000-0000-0000-0000-000000000001
 PLUTO_PROJECT_TOML_CONTENTS = """
@@ -453,7 +474,7 @@ version = "17.4.0+0"
 # ╟─9bd74542-e15a-4a48-b305-00802dd3529d
 # ╟─adadf1bc-5102-4d56-99c6-38abc45e70d2
 # ╠═291dc1e4-2978-4914-ada8-7cd7a20c7269
-# ╠═32306832-ab83-4337-8411-2c6bf70c1aaa
-# ╠═ca28059c-3b7d-4efa-865a-42f1e816f525
+# ╠═0cae0c6d-ff7a-4391-a2cb-5454c3f002dc
+# ╟─c7f67408-3475-47cd-9fc6-4ae6a1ebfd17
 # ╟─00000000-0000-0000-0000-000000000001
 # ╟─00000000-0000-0000-0000-000000000002
