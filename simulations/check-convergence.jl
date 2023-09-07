@@ -11,7 +11,48 @@ begin
 end
 
 # ╔═╡ 4303d844-8a39-4165-8000-02d2294387ea
-include("./plotting-theme.jl")
+include("./plotting-theme.jl");
+
+# ╔═╡ 445ef39b-423d-43fd-b7ae-c3775a3f10a1
+function plotsteadycheck(data)
+	dlast = transpose(data[end, 2:end])
+	dnorm = data[1:end, 2:end] ./ dlast
+	
+	x = data[1:end, 1]
+	
+	fig = with_theme(paper_theme) do
+		fig = Figure()
+	
+		ax = Axis(
+			fig[1, 1],
+			title  = "Steady-state convergence check",
+			xlabel = "Pseudo-time [s]",
+			ylabel = "Normalized values [-]"
+		)
+		
+		for (k, y) in enumerate(eachcol(dnorm))
+			lines!(ax, x, y, label = "Column $(k)",
+				   linestyle = nothing)
+		end
+	
+		limits!(ax, (0.0, 20.0), (0.94, 1.06))
+		axislegend(position = :rb)
+		fig
+	end
+
+	return fig
+end
+
+# ╔═╡ 140ac709-852d-477b-ad2a-d40b4060f0d2
+begin
+	caseno = "005"
+	
+	postpath = "reactingFoam/$(caseno)/postProcessing"
+	filepath = "$(postpath)/avgOutlets/0.00000000/surfaceFieldValue.dat"
+	
+	data = readdlm(filepath, comments = true)
+	plotsteadycheck(data)
+end
 
 # ╔═╡ 00000000-0000-0000-0000-000000000001
 PLUTO_PROJECT_TOML_CONTENTS = """
@@ -1591,5 +1632,7 @@ version = "3.5.0+0"
 # ╔═╡ Cell order:
 # ╠═e27d6530-4cbe-11ee-2b02-83ee5f1b8740
 # ╠═4303d844-8a39-4165-8000-02d2294387ea
+# ╠═445ef39b-423d-43fd-b7ae-c3775a3f10a1
+# ╠═140ac709-852d-477b-ad2a-d40b4060f0d2
 # ╟─00000000-0000-0000-0000-000000000001
 # ╟─00000000-0000-0000-0000-000000000002

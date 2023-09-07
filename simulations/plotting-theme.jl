@@ -8,6 +8,7 @@ paper_theme = Theme(
     backgroundcolor = :white,
     resolution      = (1600, 1200),
     fontsize        = 48,
+    figure_padding  = (30, 80, 30, 30),
 
     palette = (
         color       = colors,
@@ -17,7 +18,9 @@ paper_theme = Theme(
 
     Axis = (
         xgridstyle  = :dash,
-        ygridstyle  = :dash
+        ygridstyle  = :dash,
+        xgridwidth = 3.0,
+        ygridwidth = 3.0
     ),
     
     Lines = (
@@ -30,5 +33,10 @@ paper_theme = Theme(
         strokewidth = 1.5,
         color       = :transparent,
         cycle       = Cycle([:strokecolor, :marker], covary = true)
-    )
+    ),
+
+    Legend = (
+        framevisible = false, 
+        labelsize    = 36,
+    ),
 )

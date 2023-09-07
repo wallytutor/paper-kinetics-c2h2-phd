@@ -16,7 +16,7 @@ end
 
 # ╔═╡ f76d6a60-4a31-11ee-0ce2-cd0ad9ac9fe9
 begin
-    using CairoMakie
+	using CairoMakie
     using CSV
     using DataFrames
     using LsqFit
@@ -25,6 +25,9 @@ begin
     import Plots
     import PlutoUI
 end
+
+# ╔═╡ 2c9f48b2-77c4-4ff6-86d1-a86551ed12a3
+include("./plotting-theme.jl");
 
 # ╔═╡ a9ff6759-a205-422b-b08b-7a078f1819e0
 md"""
@@ -143,66 +146,64 @@ md"""
 
 # ╔═╡ 8bcd6d31-5dc0-499c-8d3f-5e99a7c8c52f
 table = let
-    table = []
-    open("wall-temperature.txt", "w") do fp
-        for sp in splist
-            x = data["x"]
-            y = data[convert(Int, sp)]
-            a, _, ΔT, T_min = fit_profile(x, y)
-            write(fp, makecode(a, ΔT, T_min, sp))
-            push!(table, [a..., ΔT, T_min, sp])
-        end
-    end
-    table
-end
-
-# ╔═╡ 42e37498-fc97-4727-870f-f05a2a42babb
-begin
-    include("./plotting-theme.jl")
-
-    x0 = data["x"]
-    xc = range(0.0, 0.6, length = 1000)
-
-    with_theme(paper_theme) do
-        fig = Figure()
-    
-        ax = Axis(
-            fig[1, 1],
-            title  = "Reactor wall temperature profile",
-            xlabel = "Position [m]",
-            ylabel = "Temperature [K]",
-        )
-    
-        for (k, row) in enumerate(table)
-            a = row[1:4]
-            ΔT, T_min, sp = row[5:7]
-    
-            # Not simulating low temperature cases.
-            if sp < 1073
-                continue
-            end
-            
-            y0 = data[convert(Int, sp)]
-            yc = F(xc, a) * ΔT .+ T_min
-            
-            ln = lines!(ax, xc, yc)
-            sc = scatter!(ax, x0[3:end-2], y0[3:end-2])
-            sc.label = "Tₛ = $(@sprintf("%.0f", sp)) K"
-        end
-    
-        limits!(ax, (0.0, 0.6), (200, 1400))
-        axislegend()
-        save("../figures/wall-temperature.png", fig,
-             px_per_unit = 2)
-        fig
-    end
-    
+	table = []
+	open("wall-temperature.txt", "w") do fp
+	    for sp in splist
+	        x = data["x"]
+	        y = data[convert(Int, sp)]
+	        a, _, ΔT, T_min = fit_profile(x, y)
+	        write(fp, makecode(a, ΔT, T_min, sp))
+			push!(table, [a..., ΔT, T_min, sp])
+	    end
+	end
+	table
 end
 
 # ╔═╡ c8ae87d1-78c8-4362-8081-8cfd201db00f
 md"""
 ## Publication figure
 """
+
+# ╔═╡ 42e37498-fc97-4727-870f-f05a2a42babb
+begin
+	x0 = data["x"]
+	xc = range(0.0, 0.6, length = 1000)
+
+	with_theme(paper_theme) do
+		fig = Figure()
+	
+		ax = Axis(
+			fig[1, 1],
+		    title  = "Reactor wall temperature profile",
+	    	xlabel = "Position [m]",
+	    	ylabel = "Temperature [K]",
+		)
+	
+		for (k, row) in enumerate(table)
+			a = row[1:4]
+			ΔT, T_min, sp = row[5:7]
+	
+			# Not simulating low temperature cases.
+			if sp < 1073
+				continue
+			end
+			
+	    	y0 = data[convert(Int, sp)]
+			yc = F(xc, a) * ΔT .+ T_min
+			
+			lines!(ax, xc, yc)
+			scatter!(ax, x0[3:end-2], y0[3:end-2],
+			         label = "Tₛ = $(@sprintf("%.0f", sp)) K")
+		end
+	
+		limits!(ax, (0.0, 0.6), (200, 1400))
+		axislegend()
+		save("../figures/wall-temperature.png", fig,
+		     px_per_unit = 2)
+		fig
+	end
+	
+end
 
 # ╔═╡ 00000000-0000-0000-0000-000000000001
 PLUTO_PROJECT_TOML_CONTENTS = """
@@ -2234,6 +2235,7 @@ version = "1.4.1+0"
 # ╟─e5cf07cf-e6d7-4360-a6b3-67448e6bfcc6
 # ╠═8bcd6d31-5dc0-499c-8d3f-5e99a7c8c52f
 # ╟─c8ae87d1-78c8-4362-8081-8cfd201db00f
-# ╟─42e37498-fc97-4727-870f-f05a2a42babb
+# ╠═2c9f48b2-77c4-4ff6-86d1-a86551ed12a3
+# ╠═42e37498-fc97-4727-870f-f05a2a42babb
 # ╟─00000000-0000-0000-0000-000000000001
 # ╟─00000000-0000-0000-0000-000000000002
