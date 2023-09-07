@@ -52,3 +52,177 @@ reference_case:
 
   # Length scale of reactor [m].
   L: 1.0
+
+##############################################################################
+# All cases
+##############################################################################
+
+all_cases:
+  - number: 1
+    P: 50
+    Q: 222
+    T: 773
+    tau_eff: 1.836
+    delta_v: 0.0
+    mesure_c2h2: 0.352
+    F: 97
+    sim_norinaga_c2h2: 0.360
+    err_norinaga_c2h2: 2.3
+    sim_dalmazsi_c2h2: 0.360
+    err_dalmazsi_c2h2: 2.3
+  - number: 2
+    P: 50
+    Q: 222
+    T: 873
+    tau_eff: 1.593
+    delta_v: 0.0
+    mesure_c2h2: 0.364
+    F: 100
+    sim_norinaga_c2h2: 0.359
+    err_norinaga_c2h2: -1.4
+    sim_dalmazsi_c2h2: 0.360
+    err_dalmazsi_c2h2: -1.1
+  - number: 3
+    P: 50
+    Q: 222
+    T: 973
+    tau_eff: 1.417
+    delta_v: 0.2
+    mesure_c2h2: 0.364
+    F: 100
+    sim_norinaga_c2h2: 0.356
+    err_norinaga_c2h2: -2.2
+    sim_dalmazsi_c2h2: 0.356
+    err_dalmazsi_c2h2: -2.2
+  - number: 4
+    P: 50
+    Q: 222
+    T: 1073
+    tau_eff: 1.278
+    delta_v: 0.8
+    mesure_c2h2: 0.346
+    F: 95
+    sim_norinaga_c2h2: 0.340
+    err_norinaga_c2h2: -1.7
+    sim_dalmazsi_c2h2: 0.340
+    err_dalmazsi_c2h2: -1.7
+  - number: 5
+    P: 50
+    Q: 222
+    T: 1123
+    tau_eff: 1.236
+    delta_v: 1.5
+    mesure_c2h2: 0.312
+    F: 86
+    sim_norinaga_c2h2: 0.321
+    err_norinaga_c2h2: 2.9
+    sim_dalmazsi_c2h2: 0.321
+    err_dalmazsi_c2h2: 2.9
+  - number: 6
+    P: 50
+    Q: 222
+    T: 1173
+    tau_eff: 1.197
+    delta_v: 2.2
+    mesure_c2h2: 0.307
+    F: 84
+    sim_norinaga_c2h2: 0.302
+    err_norinaga_c2h2: -1.6
+    sim_dalmazsi_c2h2: 0.301
+    err_dalmazsi_c2h2: -2.0
+  - number: 7
+    P: 50
+    Q: 222
+    T: 1273
+    tau_eff: 1.140
+    delta_v: 1.6
+    mesure_c2h2: 0.288
+    F: 79
+    sim_norinaga_c2h2: 0.287
+    err_norinaga_c2h2: -0.3
+    sim_dalmazsi_c2h2: 0.288
+    err_dalmazsi_c2h2: -0.0
+  - number: 8
+    P: 30
+    Q: 222
+    T: 1173
+    tau_eff: 0.713
+    delta_v: 0.9
+    mesure_c2h2: 0.323
+    F: 89
+    sim_norinaga_c2h2: 0.327
+    err_norinaga_c2h2: 1.2
+    sim_dalmazsi_c2h2: 0.327
+    err_dalmazsi_c2h2: 1.2
+  - number: 9
+    P: 30
+    Q: 222
+    T: 1223
+    tau_eff: 0.696
+    delta_v: 1.0
+    mesure_c2h2: 0.314
+    F: 86
+    sim_norinaga_c2h2: 0.320
+    err_norinaga_c2h2: 1.9
+    sim_dalmazsi_c2h2: 0.319
+    err_dalmazsi_c2h2: 1.6
+  - number: 10
+    P: 100
+    Q: 222
+    T: 1173
+    tau_eff: 2.443
+    delta_v: 6.3
+    mesure_c2h2: 0.249
+    F: 68
+    sim_norinaga_c2h2: 0.230
+    err_norinaga_c2h2: -7.6
+    sim_dalmazsi_c2h2: 0.232
+    err_dalmazsi_c2h2: -6.8
+  - number: 11
+    P: 100
+    Q: 222
+    T: 1223
+    tau_eff: 2.363
+    delta_v: 6.0
+    mesure_c2h2: 0.226
+    F: 62
+    sim_norinaga_c2h2: 0.219
+    err_norinaga_c2h2: -3.1
+    sim_dalmazsi_c2h2: 0.221
+    err_dalmazsi_c2h2: -2.2
+  - number: 12
+    P: 100
+    Q: 222
+    T: 1273
+    tau_eff: 2.294
+    delta_v: 4.9
+    mesure_c2h2: 0.201
+    F: 55
+    sim_norinaga_c2h2: 0.208
+    err_norinaga_c2h2: 3.5
+    sim_dalmazsi_c2h2: 0.212
+    err_dalmazsi_c2h2: 5.5
+  - number: 13
+    P: 100
+    Q: 378
+    T: 1023
+    tau_eff: 1.556
+    delta_v: 0.9
+    mesure_c2h2: 0.343
+    F: 94
+    sim_norinaga_c2h2: 0.342
+    err_norinaga_c2h2: -0.3
+    sim_dalmazsi_c2h2: 0.342
+    err_dalmazsi_c2h2: -0.3
+  - number: 14
+    P: 100
+    Q: 378
+    T: 1123
+    tau_eff: 1.443
+    delta_v: 3.2
+    mesure_c2h2: 0.298
+    F: 82
+    sim_norinaga_c2h2: 0.292
+    err_norinaga_c2h2: -2.0
+    sim_dalmazsi_c2h2: 0.288
+    err_dalmazsi_c2h2: -3.4
