@@ -1,11 +1,9 @@
 # Analysis of acetylene pyrolysis
 
-<center><img src="figures/009.png" width="100%" /></center>
+<center><img src="figures/reactingFoam/009.png" width="100%" /></center>
 
 Analysis of acetylene kinetics under conditions relevant to gas carburizing. The study is conducted with a DRG skeletal mechanism and comprise both PFR
 1-D simulations and 3-D CFD cases. All cases are validated experimentally and data is made available for verification.
-
-<center><img src="figures/reactor.png" width="50%" /></center>
 
 Data explored in this paper is provided in my [PhD thesis](http://docnum.univ-lorraine.fr/public/DDOC_T_2017_0158_DAL_MAZ_SILVA.pdf), mainly in Chapter 5. The kinetics mechanisms used in this study are provided in different formats at:
 
