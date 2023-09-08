@@ -33,10 +33,10 @@ function reactingFoamCaseRun()
 # reactingFoamCaseRun 005
 # reactingFoamCaseRun 006
 # reactingFoamCaseRun 007
-reactingFoamCaseRun 008-new
+# reactingFoamCaseRun 008-new
 # reactingFoamCaseRun 009-new
 # reactingFoamCaseRun 010-new
-# reactingFoamCaseRun 011-new
+reactingFoamCaseRun 011-new
 # reactingFoamCaseRun 012-new
 # reactingFoamCaseRun 013-new
 # reactingFoamCaseRun 014-new
