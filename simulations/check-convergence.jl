@@ -81,7 +81,7 @@ end
 
 # ╔═╡ 14a6cf4e-5c34-4b44-849f-6ffa3a3ee5be
 begin
-	datapath, _ = getpaths("008-new")
+	datapath, _ = getpaths("009-new")
 	readdlm(datapath, comments = true) |> plotsteadycheck
 end
 
