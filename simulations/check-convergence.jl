@@ -55,7 +55,8 @@ function plotsteadycheck(data)
 	dnorm = data[1:end, 2:end] ./ dlast
 	
 	x = data[1:end, 1]
-	
+	xlast = round(x[end] / 10) * 10
+
 	fig = with_theme(paper_theme) do
 		fig = Figure()
 	
@@ -71,7 +72,7 @@ function plotsteadycheck(data)
 				   linestyle = nothing)
 		end
 	
-		limits!(ax, (0.0, 20.0), (0.94, 1.06))
+		limits!(ax, (0.0, xlast), (0.94, 1.06))
 		axislegend(position = :rb)
 		fig
 	end
