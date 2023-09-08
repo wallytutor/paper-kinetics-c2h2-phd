@@ -92,10 +92,10 @@ begin
 	for caseno in cases
 		datapath, savepath = getpaths(caseno)
 
-		if isfile(savepath)
-			println("File exists: $(savepath)")
-			continue
-		end
+		# if isfile(savepath)
+		# 	println("File exists: $(savepath)")
+		# 	continue
+		# end
 
 		data = readdlm(datapath, comments = true)
 		fig = plotsteadycheck(data)
