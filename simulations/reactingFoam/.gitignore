@@ -15,9 +15,10 @@
 !/case/system/
 
 ## Intermediate results:
-/**/[0-9]*/
+/**/[0-9]+.*/
 !/**/0.00000000/
 !/**/20.00000000/
+!/postProcessing/avgOutlets/0.00000000/
 
 ## Foam and parallel run:
 dynamicCode/
