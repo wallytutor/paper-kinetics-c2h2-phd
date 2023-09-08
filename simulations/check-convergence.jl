@@ -87,7 +87,8 @@ end
 
 # ╔═╡ 140ac709-852d-477b-ad2a-d40b4060f0d2
 begin
-	cases = ["004", "005", "006", "007", "008", "009", "010"]
+	cases = ["004", "005", "006", "007", "008", "009",
+		     "010", "011", "012", "013", "014"]
 
 	for caseno in cases
 		datapath, savepath = getpaths(caseno)
