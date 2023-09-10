@@ -6,8 +6,8 @@ using InteractiveUtils
 
 # ╔═╡ e27d6530-4cbe-11ee-2b02-83ee5f1b8740
 begin
-	using CairoMakie
-	using DelimitedFiles
+    using CairoMakie
+    using DelimitedFiles
 end
 
 # ╔═╡ 4303d844-8a39-4165-8000-02d2294387ea
@@ -35,81 +35,79 @@ md"""
 
 # ╔═╡ bab4af14-97de-46fc-8265-4140d9d96fb7
 function getpaths(caseno)
-	postpath = "reactingFoam/$(caseno)/postProcessing"
-	datapath = "$(postpath)/avgOutlets/0.00000000/surfaceFieldValue.dat"
-	savepath = "../figures/reactingFoam/convergence-$(caseno).png"
-	return datapath, savepath
+    postpath = "reactingFoam/$(caseno)/postProcessing"
+    datapath = "$(postpath)/avgOutlets/0.00000000/surfaceFieldValue.dat"
+    savepath = "../figures/reactingFoam/convergence-$(caseno).png"
+    return datapath, savepath
 end
 
 # ╔═╡ 445ef39b-423d-43fd-b7ae-c3775a3f10a1
 function plotsteadycheck(data)
-	labels = [
-		L"\mathrm{C_2H_2}",
-		L"\mathrm{H_2}",
-		L"\mathrm{CH_4}",
-		L"\mathrm{C_2H_4}",
-		L"\mathrm{C_4H_4}",
-		L"\mathrm{T}"
-	]
-	dlast = transpose(data[end, 2:end])
-	dnorm = data[1:end, 2:end] ./ dlast
-	
-	x = data[1:end, 1]
-	xlast = round(x[end] / 10) * 10
+    labels = [
+        L"\mathrm{C_2H_2}",
+        L"\mathrm{H_2}",
+        L"\mathrm{CH_4}",
+        L"\mathrm{C_2H_4}",
+        L"\mathrm{C_4H_4}",
+        L"\mathrm{T}"
+    ]
+    dlast = transpose(data[end, 2:end])
+    dnorm = data[1:end, 2:end] ./ dlast
 
-	fig = with_theme(paper_theme) do
-		fig = Figure()
-	
-		ax = Axis(
-			fig[1, 1],
-			title  = "Steady-state convergence check",
-			xlabel = "Pseudo-time [s]",
-			ylabel = "Normalized values [-]"
-		)
-		
-		for (k, y) in enumerate(eachcol(dnorm))
-			lines!(ax, x, y, label = labels[k],
-				   linestyle = nothing)
-		end
-	
-		limits!(ax, (0.0, xlast), (0.94, 1.06))
-		axislegend(position = :rb)
-		fig
-	end
+    x = data[1:end, 1]
+    xlast = round(x[end] / 10) * 10
 
-	return fig
+    fig = with_theme(paper_theme) do
+        fig = Figure()
+
+        ax = Axis(
+            fig[1, 1],
+            title  = "Steady-state convergence check",
+            xlabel = "Pseudo-time [s]",
+            ylabel = "Normalized values [-]"
+        )
+
+        for (k, y) in enumerate(eachcol(dnorm))
+            lines!(ax, x, y, label = labels[k],
+                   linestyle = nothing)
+        end
+
+        limits!(ax, (0.0, xlast), (0.94, 1.06))
+        axislegend(position = :rb)
+        fig
+    end
+
+    return fig
 end
 
 # ╔═╡ 14a6cf4e-5c34-4b44-849f-6ffa3a3ee5be
 let
-	datapath, _ = getpaths("011")
-	datapath, _ = getpaths("012")
-	datapath, _ = getpaths("013")
-	readdlm(datapath, comments = true) |> plotsteadycheck
+    datapath, _ = getpaths("014")
+    readdlm(datapath, comments = true) |> plotsteadycheck
 end
 
 # ╔═╡ 140ac709-852d-477b-ad2a-d40b4060f0d2
 begin
-	cases = ["004", "005", "006", "007", "008", "009",
-		     "010", "011", "012", "013", "014"]
+    cases = ["004", "005", "006", "007", "008", "009",
+             "010", "011", "012", "013", "014"]
 
-	for caseno in cases
-		datapath, savepath = getpaths(caseno)
+    for caseno in cases
+        datapath, savepath = getpaths(caseno)
 
-		if !isfile(datapath)
-			println("Case does not exist: $(caseno)")
-			continue
-		end
-		
-		if isfile(savepath)
-			println("File exists: $(savepath)")
-			continue
-		end
+        if !isfile(datapath)
+            println("Case does not exist: $(caseno)")
+            continue
+        end
 
-		data = readdlm(datapath, comments = true)
-		fig = plotsteadycheck(data)
-		save(savepath, fig, px_per_unit = 2)
-	end
+        if isfile(savepath)
+            println("File exists: $(savepath)")
+            continue
+        end
+
+        data = readdlm(datapath, comments = true)
+        fig = plotsteadycheck(data)
+        save(savepath, fig, px_per_unit = 2)
+    end
 end
 
 # ╔═╡ 00000000-0000-0000-0000-000000000001

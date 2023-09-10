@@ -6,9 +6,9 @@ using InteractiveUtils
 
 # ╔═╡ 291dc1e4-2978-4914-ada8-7cd7a20c7269
 begin
-	using DataFrames
-	using Printf
-	using YAML
+    using DataFrames
+    using Printf
+    using YAML
 end
 
 # ╔═╡ 9bd74542-e15a-4a48-b305-00802dd3529d
@@ -28,73 +28,73 @@ The following results were obtained in the first run of the study.
         <td style="text-align: center;" width="50px">Case</td>
         <td style="text-align: center;" width="150px">Measured</td>
         <td style="text-align: center;" width="150px">PFR (Norinaga, 2009)</td>
-        <td style="text-align: center;" width="150px">CFD (Skeletal model)</td> 
+        <td style="text-align: center;" width="150px">CFD (Skeletal model)</td>
     </tr>
     <tr>
         <td style="text-align: center;">4</td>
         <td style="text-align: center;">0.346</td>
         <td style="text-align: center;">0.340</td>
-        <td style="text-align: center;">0.336</td> 
+        <td style="text-align: center;">0.336</td>
     </tr>
     <tr>
         <td style="text-align: center;">5</td>
         <td style="text-align: center;">0.312</td>
         <td style="text-align: center;">0.321</td>
-        <td style="text-align: center;">0.319</td> 
+        <td style="text-align: center;">0.319</td>
     </tr>
     <tr>
         <td style="text-align: center;">6</td>
         <td style="text-align: center;">0.307</td>
         <td style="text-align: center;">0.302</td>
-        <td style="text-align: center;">0.299</td> 
+        <td style="text-align: center;">0.299</td>
     </tr>
     <tr>
         <td style="text-align: center;">7</td>
         <td style="text-align: center;">0.288</td>
         <td style="text-align: center;">0.287</td>
-        <td style="text-align: center;">0.286</td> 
+        <td style="text-align: center;">0.286</td>
     </tr>
     <tr>
         <td style="text-align: center;">8</td>
         <td style="text-align: center;">0.323</td>
         <td style="text-align: center;">0.327</td>
-        <td style="text-align: center;">0.323</td> 
+        <td style="text-align: center;">0.323</td>
     </tr>
     <tr>
         <td style="text-align: center;">9</td>
         <td style="text-align: center;">0.314</td>
         <td style="text-align: center;">0.320</td>
-        <td style="text-align: center;">0.314</td> 
+        <td style="text-align: center;">0.314</td>
     </tr>
     <tr>
         <td style="text-align: center;">10</td>
         <td style="text-align: center;">0.249</td>
         <td style="text-align: center;">0.230</td>
-        <td style="text-align: center;">0.234</td> 
+        <td style="text-align: center;">0.234</td>
     </tr>
     <tr>
         <td style="text-align: center;">11</td>
         <td style="text-align: center;">0.226</td>
         <td style="text-align: center;">0.219</td>
-        <td style="text-align: center;">0.222</td> 
+        <td style="text-align: center;">0.222</td>
     </tr>
     <tr>
         <td style="text-align: center;">12</td>
         <td style="text-align: center;">0.201</td>
         <td style="text-align: center;">0.208</td>
-        <td style="text-align: center;">0.216</td> 
+        <td style="text-align: center;">0.216</td>
     </tr>
     <tr>
         <td style="text-align: center;">13</td>
         <td style="text-align: center;">0.343</td>
         <td style="text-align: center;">0.342</td>
-        <td style="text-align: center;">0.338</td> 
+        <td style="text-align: center;">0.338</td>
     </tr>
     <tr>
         <td style="text-align: center;">14</td>
         <td style="text-align: center;">0.298</td>
         <td style="text-align: center;">0.292</td>
-        <td style="text-align: center;">0.292</td> 
+        <td style="text-align: center;">0.292</td>
     </tr>
 </table>
 """
@@ -130,53 +130,53 @@ const M3_PER_CM3::Float64 = 1 / (10^2)^3
 
 # ╔═╡ 589c6683-bf8e-43a3-8c59-4cc78c6d8242
 """
-	standard_flow_to_gas_speed(
-		q::Number;
-		T_work::Number = 298.15,
-		P_work::Number = P_STANDARD,
-		A_cross::Number = 1.0
-	)::Float64		
-		
+    standard_flow_to_gas_speed(
+        q::Number;
+        T_work::Number = 298.15,
+        P_work::Number = P_STANDARD,
+        A_cross::Number = 1.0
+    )::Float64
+
 Convert laboratory gas flow in Scm³/min to mean speed in m/s.
 
 - `q::Number`: Flow rate to be converted in Scm³/min (sccm).
 - `P_work::Number`: Reactor working pressure in pascal [Pa]
 - `T_work::Number = 298.15`: Reactor working temperature in kelvin [K].
 - `A_cross::Number = 1.0`: Reactor cross sectional area in squared meters [m²].
-"""	
+"""
 function standard_flow_to_gas_speed(
-		q::Number,
-		P_work::Number;
-		T_work::Number = 298.15,
-		A_cross::Number = 1.0
-	)::Float64
-	scaler = MIN_PER_SEC * M3_PER_CM3
-	scaler *= P_STANDARD / T_STANDARD
-	return scaler * q * (T_work / P_work) / A_cross
+        q::Number,
+        P_work::Number;
+        T_work::Number = 298.15,
+        A_cross::Number = 1.0
+    )::Float64
+    scaler = MIN_PER_SEC * M3_PER_CM3
+    scaler *= P_STANDARD / T_STANDARD
+    return scaler * q * (T_work / P_work) / A_cross
 end
 
 # ╔═╡ 0cae0c6d-ff7a-4391-a2cb-5454c3f002dc
 df = let
-	cases = conditions["all_cases"]
-	needed = ["P", "Q", "T", "outlet_c2h2", "norinaga_c2h2", "dalmazsi_c2h2"]
+    cases = conditions["all_cases"]
+    needed = ["P", "Q", "T", "outlet_c2h2", "norinaga_c2h2", "dalmazsi_c2h2"]
 
-	
-	dfcases = [[cases[k][n] for n in needed] for k in 1:14]
-	df = DataFrame(transpose(hcat(dfcases...)), needed)
 
-	# Pressure from mbar to Pa.
-	df[!, "P"] *= 100
+    dfcases = [[cases[k][n] for n in needed] for k in 1:14]
+    df = DataFrame(transpose(hcat(dfcases...)), needed)
 
-	# Flow mean speed.
-	q = df[!, "Q"]
-	P = df[!, "P"]
-	A = π * (conditions["R"] / 2)^2
-	df[!, "U"] = standard_flow_to_gas_speed.(q, P; T_work = 301.0, A_cross = A)
+    # Pressure from mbar to Pa.
+    df[!, "P"] *= 100
 
-	# Flow rate to mass flow.
-	# TODO
+    # Flow mean speed.
+    q = df[!, "Q"]
+    P = df[!, "P"]
+    A = π * (conditions["R"] / 2)^2
+    df[!, "U"] = standard_flow_to_gas_speed.(q, P; T_work = 301.0, A_cross = A)
 
-	df
+    # Flow rate to mass flow.
+    # TODO
+
+    df
 end;
 
 # ╔═╡ c7f67408-3475-47cd-9fc6-4ae6a1ebfd17
@@ -188,61 +188,61 @@ $(df)
 
 # ╔═╡ 5117ee30-2fae-4888-acc9-9c7a8fe6148b
 function chemFoam_initialConditions(; T, p, acetylene = 0.36)
-	x = conditions["acetylene_bottle"]
-	
-	n2       = 1.0 - acetylene
-	c2h2     = acetylene * x["C2H2"]
-	ch3coch3 = acetylene * x["CH3COCH3"]
-	ch4      = acetylene * x["CH4"]
-	
-	template = """\
-	/*--------------------------------*- C++ -*----------------------------------*\\
-	| =========                 |                                                 |
-	| \\\\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
-	|  \\\\    /   O peration     | Version:  v2106                                 |
-	|   \\\\  /    A nd           | Website:  www.openfoam.com                      |
-	|    \\\\/     M anipulation  |                                                 |
-	\\*---------------------------------------------------------------------------*/
-	FoamFile
-	{
-	    version     2.0;
-	    format      ascii;
-	    class       dictionary;
-	    object      initialConditions;
-	}
-	// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-	
-	constantProperty    pressure;
-	
-	fractionBasis       mole;
-	
-	fractions
-	{
-	    N2              $(@sprintf("%.6f", n2));
-	    C2H2            $(@sprintf("%.6f", c2h2));
-	    CH3COCH3        $(@sprintf("%.6f", ch3coch3));
-	    CH4             $(@sprintf("%.6f", ch4));
-	}
-	
-	p                   $(@sprintf("%.1f", p));
-	
-	T                   $(@sprintf("%.2f", T));
-	
-	
-	// ************************************************************************* //
-	"""
+    x = conditions["acetylene_bottle"]
+
+    n2       = 1.0 - acetylene
+    c2h2     = acetylene * x["C2H2"]
+    ch3coch3 = acetylene * x["CH3COCH3"]
+    ch4      = acetylene * x["CH4"]
+
+    template = """\
+    /*--------------------------------*- C++ -*----------------------------------*\\
+    | =========                 |                                                 |
+    | \\\\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
+    |  \\\\    /   O peration     | Version:  v2106                                 |
+    |   \\\\  /    A nd           | Website:  www.openfoam.com                      |
+    |    \\\\/     M anipulation  |                                                 |
+    \\*---------------------------------------------------------------------------*/
+    FoamFile
+    {
+        version     2.0;
+        format      ascii;
+        class       dictionary;
+        object      initialConditions;
+    }
+    // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+    constantProperty    pressure;
+
+    fractionBasis       mole;
+
+    fractions
+    {
+        N2              $(@sprintf("%.6f", n2));
+        C2H2            $(@sprintf("%.6f", c2h2));
+        CH3COCH3        $(@sprintf("%.6f", ch3coch3));
+        CH4             $(@sprintf("%.6f", ch4));
+    }
+
+    p                   $(@sprintf("%.1f", p));
+
+    T                   $(@sprintf("%.2f", T));
+
+
+    // ************************************************************************* //
+    """
 end
 
 # ╔═╡ 46bb916d-0295-4f9b-a093-4c826fef85a1
 begin
-	_ = open("chemFoam/case/constant/initialConditions", "w") do fp
-		write(fp, chemFoam_initialConditions(;
-				T = conditions["reference_case"]["T"],	
-				p = conditions["reference_case"]["P"],	
-				acetylene = conditions["reference_case"]["relative_acetylene"]
-			)
-		)
-	end
+    _ = open("chemFoam/case/constant/initialConditions", "w") do fp
+        write(fp, chemFoam_initialConditions(;
+                T = conditions["reference_case"]["T"],
+                p = conditions["reference_case"]["P"],
+                acetylene = conditions["reference_case"]["relative_acetylene"]
+            )
+        )
+    end
 end;
 
 # ╔═╡ 00000000-0000-0000-0000-000000000001
