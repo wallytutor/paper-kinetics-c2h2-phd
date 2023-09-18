@@ -8,5 +8,6 @@ runApplication gmshToFoam wedge.msh
 
 runApplication checkMesh
 
+# pip install PyFoam
 # pyFoamChangeBoundaryType.py . front wedge
 # pyFoamChangeBoundaryType.py . back  wedge
